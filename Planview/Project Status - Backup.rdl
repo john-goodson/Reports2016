@@ -1,25 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="PerViewDataMart">
-      <DataSourceReference>PerViewDataMartNew</DataSourceReference>
+      <DataSourceReference>PerViewDataMart</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>468304cd-60b2-44c8-ab53-4809fe29d321</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
+    <DataSet Name="dsProjects">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmProject">
+            <Value>=Parameters!ParmProject.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmShellProjects">
+            <Value>=Parameters!ParmShellProjects.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmActiveStatus">
+            <Value>=Parameters!ParmActiveStatus.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectManager">
+            <Value>=Parameters!ParmProjectManager.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>IF @ParmProject = NULL OR @ParmProject = ''
+	BEGIN
+		IF @ParmShellProjects = 'No'
+			SELECT	DISTINCT
+					p.ProjectName
+				  , p.ProjectUID AS Value
+			FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
+			WHERE	1=1
+					AND (p.ProjectType IN (0,5,6))
+					AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
+					AND p.ProjectUID IN (@ParmProjectsAllowed)
+					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
+					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+			ORDER BY ProjectName
+		IF @ParmShellProjects = 'Yes'
+			SELECT	DISTINCT
+					p.ProjectName
+				  , p.ProjectUID AS Value
+			FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
+			WHERE	1=1
+					AND (p.ProjectType IN (0,5,6))
+					AND p.ProjectUID IN (@ParmProjectsAllowed)
+					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
+					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+			ORDER BY ProjectName
+		IF @ParmShellProjects = 'Only'
+			SELECT	DISTINCT
+					p.ProjectName
+				  , p.ProjectUID AS Value
+			FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
+			WHERE	1=1
+					AND (p.ProjectType IN (0,5,6))
+					AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
+					AND p.ProjectUID IN (@ParmProjectsAllowed)
+					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
+					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+			ORDER BY ProjectName
+	END
+ELSE
+	SELECT	DISTINCT 
+			p.ProjectName
+		  , p.ProjectUID AS Value
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
+	WHERE	1=1
+			AND (p.ProjectType IN (0,5,6))
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID = @ParmProject
+	ORDER BY ProjectName</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
     <DataSet Name="dsUpcomingPeriods">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <CommandText>
-select '30 Days' as Period, '30' as MemberValue
-</CommandText>
+          SELECT [MemberValue] AS Period,
+          CASE
+          WHEN [MemberValue]= '15 Days' THEN 15
+          WHEN [MemberValue]= '30 Days' THEN 30
+          WHEN [MemberValue]= '45 Days' THEN 45
+          WHEN [MemberValue]= '60 Days' THEN 60
+          WHEN [MemberValue]= '90 Days' THEN 90
+          WHEN [MemberValue]= 'All Days' THEN 365
+          ELSE 15
+          END AS [MemberValue]
+          FROM ProjectWebApp.dbo.[MSPLT_Upcoming Period_UserView] WITH (NOLOCK)
+          WHERE  [MemberValue] IS NOT NULL
+          ORDER BY [MemberValue]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="MemberValue">
           <DataField>MemberValue</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Period">
           <DataField>Period</DataField>
@@ -145,6 +237,202 @@ select '30 Days' as Period, '30' as MemberValue
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="uspReportsProjectStatus_PS">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmProjectName">
+            <Value>=Parameters!ParmProjectName.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmReportingFinish">
+            <Value>=Parameters!ParmReportingFinish.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmBaselineNonBaseline">
+            <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>uspReportsProjectStatus_PS</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProjectUID">
+          <DataField>ProjectUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="Project_Name">
+          <DataField>Project_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Last_Modified">
+          <DataField>Last Modified</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="ProjectURL">
+          <DataField>ProjectURL</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Owner">
+          <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Level_2">
+          <DataField>Level 2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Project_Client_Display">
+          <DataField>Project Client Display</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Business_Owner">
+          <DataField>Business Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Parent_Program">
+          <DataField>Parent Program</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Project_Sponsor">
+          <DataField>Project Sponsor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Start">
+          <DataField>Start</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Finish">
+          <DataField>Finish</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Baseline_Start">
+          <DataField>Baseline Start</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Baseline_Finish">
+          <DataField>Baseline Finish</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Percent_Completed">
+          <DataField>Percent Completed</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Work">
+          <DataField>Work</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Remaining_Work">
+          <DataField>Remaining Work</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Baseline_Work">
+          <DataField>Baseline Work</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Reporting_Start_Date">
+          <DataField>Reporting Start Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Reporting_End_Date">
+          <DataField>Reporting End Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Upcoming_Period">
+          <DataField>Upcoming Period</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Executive_Status_Summary">
+          <DataField>Executive Status Summary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Project_Manager_Notes">
+          <DataField>Project Manager Notes</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Schedule_Status_Commentary">
+          <DataField>Schedule Status Commentary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Deliverable_Status_Commentary">
+          <DataField>Deliverable Status Commentary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Milestone_Status_Commentary">
+          <DataField>Milestone Status Commentary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Project_Outcomes_Expected">
+          <DataField>Project Outcomes Expected</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SchedInd">
+          <DataField>SchedInd</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="MilestonesInd">
+          <DataField>MilestonesInd</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="DeliverablesInd">
+          <DataField>DeliverablesInd</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteTasks">
+          <DataField>NumberOfIncompleteTasks</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfTasks">
+          <DataField>NumberOfTasks</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteMilestones">
+          <DataField>NumberOfIncompleteMilestones</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="SchedRawScore">
+          <DataField>SchedRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfMilestones">
+          <DataField>NumberOfMilestones</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfIncompleteDeliverables">
+          <DataField>NumberOfIncompleteDeliverables</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="NumberOfDeliverables">
+          <DataField>NumberOfDeliverables</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="MilestonesRawScore">
+          <DataField>MilestonesRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="PM_Assessed_Project_Health">
+          <DataField>PM Assessed Project Health</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PM_Assessed_Project_Health___Prior_Period">
+          <DataField>PM Assessed Project Health - Prior Period</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OverallHealthScore">
+          <DataField>OverallHealthScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="DeliverablesRawScore">
+          <DataField>DeliverablesRawScore</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Project_Description">
+          <DataField>Project Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GoLiveDate">
+          <DataField>GoLiveDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
     <DataSet Name="uspReportsRisksIssues_ProjectStatus_PS">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
@@ -207,12 +495,69 @@ select '30 Days' as Period, '30' as MemberValue
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="uspReportsProjectStatus_ActionItemsDecisions_copyofBrokenSP">
+      <Query>
+        <DataSourceName>PerViewDataMart</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ParmProjectName">
+            <Value>=Parameters!ParmProjectName.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>uspReportsProjectStatus_ActionItemsDecisions_copyofBrokenSP</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProjectUID">
+          <DataField>ProjectUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Item">
+          <DataField>Item</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="URL">
+          <DataField>URL</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Title">
+          <DataField>Title</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DueDate">
+          <DataField>DueDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="DecisionMaker">
+          <DataField>DecisionMaker</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Priority">
+          <DataField>Priority</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
     <DataSet Name="dsProjects2">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
@@ -222,10 +567,10 @@ ELSE
 	SELECT	DISTINCT 
 			p.ProjectName
 		  , p.ProjectUID AS Value
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
 	WHERE	1=1
 			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
 			AND p.ProjectUID = @ParmProject
 	ORDER BY ProjectName</CommandText>
       </Query>
@@ -253,16 +598,16 @@ ELSE
         </QueryParameters>
         <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
 	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
-	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
 	WHERE	1=1
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
 	ORDER BY [ProjectActiveStatus]
 ELSE
 	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
-	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
 	WHERE	1=1
 			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			--AND p.ProjectUID = @ParmProject
+			AND p.ProjectUID = @ParmProject
 	ORDER BY [ProjectActiveStatus]</CommandText>
       </Query>
       <Fields>
@@ -279,24 +624,27 @@ ELSE
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
 	SELECT	DISTINCT p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
 	WHERE	1=1
 			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
 			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
 	ORDER BY 1
 ELSE
 	SELECT	p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
 	WHERE	1=1
 			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
 			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
 			AND p.ProjectUID = @ParmProject
 	ORDER BY 1</CommandText>
@@ -319,6 +667,9 @@ ELSE
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
@@ -328,10 +679,10 @@ ELSE
 		  , NULL AS ProjectOwnerResourceUID
 ELSE
 	SELECT	p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView AS p WITH (NOLOCK)
 	WHERE	1=1
 			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
+			AND p.ProjectUID IN (@ParmProjectsAllowed)
 			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
 			AND p.ProjectUID = @ParmProject
 	ORDER BY 1</CommandText>
@@ -356,8 +707,9 @@ ELSE
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT	r.ResourceName	
-FROM	PerViewDataMart.dbo.dim_resources r WITH (NOLOCK)	
-WHERE	r.ResourceNTAccount = @UserID	</CommandText>
+FROM	PerViewDataMart.dbo.Resources_UserView r WITH (NOLOCK)	
+WHERE	r.ResourceNTAccount = @UserID	
+</CommandText>
       </Query>
       <Fields>
         <Field Name="ResourceName">
@@ -392,275 +744,6 @@ WHERE	r.ResourceNTAccount = @UserID	</CommandText>
         </Field>
         <Field Name="ResourceUID">
           <DataField>ResourceUID</DataField>
-          <rd:TypeName>System.Guid</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="uspReportProjectStatus_PS">
-      <Query>
-        <DataSourceName>PerViewDataMart</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@ParmProjectName">
-            <Value>=Parameters!ParmProjectName.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmReportingFinish">
-            <Value>=Parameters!ParmReportingFinish.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmBaselineNonBaseline">
-            <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandType>StoredProcedure</CommandType>
-        <CommandText>uspReportsProjectStatus_PS</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ProjectUID">
-          <DataField>ProjectUID</DataField>
-          <rd:TypeName>System.Guid</rd:TypeName>
-        </Field>
-        <Field Name="Project_Name">
-          <DataField>Project_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Last_Modified">
-          <DataField>Last Modified</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="ProjectURL">
-          <DataField>ProjectURL</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Owner">
-          <DataField>Owner</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Level_2">
-          <DataField>Level 2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Project_Client_Display">
-          <DataField>Project Client Display</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Parent_Program">
-          <DataField>Parent Program</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Business_Owner">
-          <DataField>Business Owner</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Project_Sponsor">
-          <DataField>Project Sponsor</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Finish">
-          <DataField>Finish</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Baseline_Start">
-          <DataField>Baseline Start</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Baseline_Finish">
-          <DataField>Baseline Finish</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Percent_Completed">
-          <DataField>Percent Completed</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="Work">
-          <DataField>Work</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Baseline_Work">
-          <DataField>Baseline Work</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Reporting_Start_Date">
-          <DataField>Reporting Start Date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Reporting_End_Date">
-          <DataField>Reporting End Date</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Upcoming_Period">
-          <DataField>Upcoming Period</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Executive_Status_Summary">
-          <DataField>Executive Status Summary</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Project_Manager_Notes">
-          <DataField>Project Manager Notes</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Schedule_Status_Commentary">
-          <DataField>Schedule Status Commentary</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Deliverable_Status_Commentary">
-          <DataField>Deliverable Status Commentary</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Milestone_Status_Commentary">
-          <DataField>Milestone Status Commentary</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Project_Outcomes_Expected">
-          <DataField>Project Outcomes Expected</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SchedInd">
-          <DataField>SchedInd</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="MilestonesInd">
-          <DataField>MilestonesInd</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="DeliverablesInd">
-          <DataField>DeliverablesInd</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="PM_Assessed_Project_Health">
-          <DataField>PM Assessed Project Health</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="PM_Assessed_Project_Health___Prior_Period">
-          <DataField>PM Assessed Project Health - Prior Period</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SchedRawScore">
-          <DataField>SchedRawScore</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfIncompleteTasks">
-          <DataField>NumberOfIncompleteTasks</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfTasks">
-          <DataField>NumberOfTasks</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="MilestonesRawScore">
-          <DataField>MilestonesRawScore</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfIncompleteMilestones">
-          <DataField>NumberOfIncompleteMilestones</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfMilestones">
-          <DataField>NumberOfMilestones</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="DeliverablesRawScore">
-          <DataField>DeliverablesRawScore</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfIncompleteDeliverables">
-          <DataField>NumberOfIncompleteDeliverables</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="NumberOfDeliverables">
-          <DataField>NumberOfDeliverables</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="OverallHealthScore">
-          <DataField>OverallHealthScore</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Project_Description">
-          <DataField>Project Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="GoLiveDate">
-          <DataField>GoLiveDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="Start">
-          <DataField>Start</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="dsProjects">
-      <Query>
-        <DataSourceName>PerViewDataMart</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@ParmProject">
-            <Value>=Parameters!ParmProject.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmShellProjects">
-            <Value>=Parameters!ParmShellProjects.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmProjectManager">
-            <Value>=Parameters!ParmProjectManager.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>	IF @ParmProject = NULL OR @ParmProject = ''
-	BEGIN
-		IF @ParmShellProjects = 'No'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-		IF @ParmShellProjects = 'Yes'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-		IF @ParmShellProjects = 'Only'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-	END
-ELSE
-	SELECT	DISTINCT 
-			p.ProjectName
-		  , p.ProjectUID AS Value
-	FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-	WHERE	1=1
-			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND p.ProjectUID = @ParmProject
-	ORDER BY ProjectName</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ProjectName">
-          <DataField>ProjectName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Value">
-          <DataField>Value</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
       </Fields>
@@ -701,7 +784,7 @@ ELSE
                                     "Overdue Key Tasks / Milestones")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -734,7 +817,7 @@ ELSE
                                 <TextRun>
                                   <Value>% Complete</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -774,7 +857,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -988,7 +1071,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1024,7 +1107,7 @@ ELSE
                                     "Overdue Deliverables")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1058,7 +1141,7 @@ ELSE
                                 <TextRun>
                                   <Value>% Complete</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1098,7 +1181,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1313,7 +1396,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1346,7 +1429,7 @@ ELSE
                                     "Current Period Accomplishments")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1379,7 +1462,7 @@ ELSE
                                 <TextRun>
                                   <Value>Actual Finish</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1543,7 +1626,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1576,7 +1659,7 @@ ELSE
                                     "Upcoming Key Tasks / Milestones")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1610,7 +1693,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1769,7 +1852,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1792,7 +1875,7 @@ ELSE
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.4375in</Height>
+                  <Height>0.25in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1805,7 +1888,7 @@ ELSE
                                 <TextRun>
                                   <Value>Active Risks</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -1829,7 +1912,7 @@ ELSE
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1858,7 +1941,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(CountRows("Tablix1") = 0, "Risk" &amp; vbCrLf &amp; "  None", "Risk")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1900,7 +1983,7 @@ ELSE
                                 <TextRun>
                                   <Value>Probability</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1945,7 +2028,7 @@ ELSE
                                 <TextRun>
                                   <Value>Impact</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1990,7 +2073,7 @@ ELSE
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2040,7 +2123,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -2085,7 +2168,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Risk_Probability.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -2124,7 +2207,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Risk_Impact.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2162,7 +2245,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Due_Date.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -2227,7 +2310,7 @@ ELSE
             </Filters>
             <Top>2.66184in</Top>
             <Left>0.12069in</Left>
-            <Height>0.8125in</Height>
+            <Height>0.625in</Height>
             <Width>5.08764in</Width>
             <ZIndex>4</ZIndex>
             <Visibility>
@@ -2242,7 +2325,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -2262,7 +2345,7 @@ ELSE
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.4375in</Height>
+                  <Height>0.25in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -2275,7 +2358,7 @@ ELSE
                                 <TextRun>
                                   <Value>Active Issues</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2299,7 +2382,7 @@ ELSE
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2330,7 +2413,7 @@ ELSE
                                     "Issue")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2375,7 +2458,7 @@ ELSE
                                 <TextRun>
                                   <Value>Priority</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2420,7 +2503,7 @@ ELSE
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2460,7 +2543,7 @@ ELSE
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.2622in</Height>
+                  <Height>0.1875in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -2473,7 +2556,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -2518,7 +2601,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Issue_Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -2557,7 +2640,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Due_Date.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -2629,7 +2712,7 @@ ELSE
             </SortExpressions>
             <Top>2.66184in</Top>
             <Left>5.38387in</Left>
-            <Height>0.8872in</Height>
+            <Height>0.625in</Height>
             <Width>5.07169in</Width>
             <ZIndex>5</ZIndex>
             <Visibility>
@@ -2644,7 +2727,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Segoe UI Light</FontFamily>
+              <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -2671,7 +2754,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Manager Notes</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2689,7 +2772,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2715,7 +2798,7 @@ ELSE
                                   <Value>=Fields!Project_Manager_Notes.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2757,7 +2840,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>6.0621in</Top>
             <Left>0.12069in</Left>
             <Height>0.45833in</Height>
@@ -2794,7 +2877,7 @@ ELSE
                                 <TextRun>
                                   <Value>Schedule Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2812,7 +2895,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2838,7 +2921,7 @@ ELSE
                                   <Value>=Fields!Schedule_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2880,7 +2963,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>6.52043in</Top>
             <Left>0.12069in</Left>
             <Height>0.45833in</Height>
@@ -2917,7 +3000,7 @@ ELSE
                                 <TextRun>
                                   <Value>Deliverable Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2933,7 +3016,7 @@ ELSE
                             <TopBorder>
                               <Style>Solid</Style>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2959,7 +3042,7 @@ ELSE
                                   <Value>=Fields!Deliverable_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3001,7 +3084,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>6.97876in</Top>
             <Left>0.10865in</Left>
             <Height>0.45833in</Height>
@@ -3038,7 +3121,7 @@ ELSE
                                 <TextRun>
                                   <Value>Milestone Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3056,7 +3139,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3082,7 +3165,7 @@ ELSE
                                   <Value>=Fields!Milestone_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3124,7 +3207,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>7.43709in</Top>
             <Left>0.10865in</Left>
             <Height>0.45833in</Height>
@@ -3161,7 +3244,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Outcomes Expected</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3179,7 +3262,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3205,7 +3288,7 @@ ELSE
                                   <Value>=Fields!Project_Outcomes_Expected.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3248,7 +3331,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>7.89542in</Top>
             <Left>0.12069in</Left>
             <Height>0.45833in</Height>
@@ -3272,7 +3355,7 @@ ELSE
                   <TextRun>
                     <Value>Key Tasks / Milestones</Value>
                     <Style>
-                      <FontFamily>Segoe UI Light</FontFamily>
+                      <FontFamily>Tahoma</FontFamily>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -3283,9 +3366,9 @@ ELSE
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox474</rd:DefaultName>
-            <Top>3.79126in</Top>
-            <Left>0.12069in</Left>
-            <Height>0.44792in</Height>
+            <Top>3.98918in</Top>
+            <Left>0.10865in</Left>
+            <Height>0.25in</Height>
             <Width>10.33487in</Width>
             <ZIndex>11</ZIndex>
             <Visibility>
@@ -3301,7 +3384,7 @@ ELSE
                 <Style>Solid</Style>
                 <Width>1.25pt</Width>
               </TopBorder>
-              <BackgroundColor>Tan</BackgroundColor>
+              <BackgroundColor>#d6ebff</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -3330,7 +3413,7 @@ ELSE
                                 <TextRun>
                                   <Value>Executive Status Summary</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3351,7 +3434,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1.25pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3377,7 +3460,7 @@ ELSE
                                   <Value>=Fields!Executive_Status_Summary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3420,7 +3503,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>2.16184in</Top>
             <Left>0.12069in</Left>
             <Height>0.5in</Height>
@@ -3454,7 +3537,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Project_Name.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -3503,7 +3586,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>0.01948in</Top>
             <Left>0.10865in</Left>
             <Height>0.25in</Height>
@@ -3905,7 +3988,7 @@ ELSE
                                 <Source>External</Source>
                                 <Value />
                               </TopImage>
-                              <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                              <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                               <Left>0.06412in</Left>
                               <Height>1.12848in</Height>
                               <Width>1.74879in</Width>
@@ -3936,7 +4019,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!OverallHealthScore.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>0.00;(0.00)</Format>
                                   </Style>
@@ -4010,7 +4093,7 @@ ELSE
                                 <TextRun>
                                   <Value>Overall Health Indicator:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4055,7 +4138,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4210,9 +4293,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeUnrimmedTrafficLights</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -4250,7 +4330,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <Visibility>
                             <Hidden>=Fields!OverallHealthScore.Value &lt;&gt; 1001</Hidden>
                           </Visibility>
@@ -4285,7 +4365,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>0.28336in</Top>
             <Left>0.10865in</Left>
             <Height>1.37848in</Height>
@@ -4319,7 +4399,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Description</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -4340,7 +4420,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1.25pt</Width>
                             </TopBorder>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -4367,7 +4447,7 @@ ELSE
                                   <Value>=Fields!Project_Description.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4410,7 +4490,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>1.66184in</Top>
             <Left>0.12069in</Left>
             <Height>0.5in</Height>
@@ -4453,7 +4533,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish" AND IsNothing(Fields!Baseline_Start.Value),"Project Not Baselined","")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4581,9 +4661,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeSigns</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -4621,7 +4698,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -4641,7 +4718,7 @@ ELSE
                                 <TextRun>
                                   <Value>Schedule Variance</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4680,7 +4757,7 @@ ELSE
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4807,9 +4884,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeSigns</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -4847,7 +4921,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <ZIndex>1</ZIndex>
                           <Style>
                             <Border>
@@ -4868,7 +4942,7 @@ ELSE
                                 <TextRun>
                                   <Value>Milestone Hit Rate</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4907,7 +4981,7 @@ ELSE
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5034,9 +5108,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeSigns</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -5074,7 +5145,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <ZIndex>2</ZIndex>
                           <Style>
                             <Border>
@@ -5095,7 +5166,7 @@ ELSE
                                 <TextRun>
                                   <Value>Deliverable Hit Rate</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5134,7 +5205,7 @@ ELSE
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5267,9 +5338,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeSigns</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -5307,7 +5375,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <ZIndex>3</ZIndex>
                           <Style>
                             <Border>
@@ -5328,7 +5396,7 @@ ELSE
                                 <TextRun>
                                   <Value>PM Assessed Project Health</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5336,7 +5404,7 @@ ELSE
                                   <Label>messagelabel</Label>
                                   <Value>=IIF(Fields!PM_Assessed_Project_Health.Value = "-"," (not defined)","")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5375,7 +5443,7 @@ ELSE
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5508,9 +5576,6 @@ ELSE
                               <StateDataElementName />
                               <rd:IconsSet>ThreeSigns</rd:IconsSet>
                               <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
                                 <ShadowOffset>2pt</ShadowOffset>
                               </Style>
                               <Top>4</Top>
@@ -5548,7 +5613,7 @@ ELSE
                             <Source>External</Source>
                             <Value />
                           </TopImage>
-                          <DataSetName>uspReportProjectStatus_PS</DataSetName>
+                          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -5568,7 +5633,7 @@ ELSE
                                 <TextRun>
                                   <Value>PM Assessed Project Health - Prior Period</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5616,7 +5681,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>0.28336in</Top>
             <Left>2.9424in</Left>
             <Height>1.25in</Height>
@@ -5659,7 +5724,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Manager:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5693,7 +5758,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5726,7 +5791,7 @@ ELSE
                                 <TextRun>
                                   <Value>Baseline Start:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5760,7 +5825,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!Baseline_Start.Value),"Not Baselined", Fields!Baseline_Start.Value)</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -5801,7 +5866,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Sponsor:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5835,7 +5900,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Project_Sponsor.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5868,7 +5933,7 @@ ELSE
                                 <TextRun>
                                   <Value>Baseline Finish:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5902,7 +5967,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!Baseline_Finish.Value), "Not Baselined", Fields!Baseline_Finish.Value)</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -5943,7 +6008,7 @@ ELSE
                                 <TextRun>
                                   <Value>Business Owner:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5977,7 +6042,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Business_Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -6010,7 +6075,7 @@ ELSE
                                 <TextRun>
                                   <Value>Start:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6044,7 +6109,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Start.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6085,7 +6150,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project % Completed:      </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6093,7 +6158,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Percent_Completed.Value / 100</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -6129,7 +6194,7 @@ ELSE
                                 <TextRun>
                                   <Value>Finish:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6163,7 +6228,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Finish.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6204,7 +6269,7 @@ ELSE
                                 <TextRun>
                                   <Value>Client:      </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6213,7 +6278,7 @@ ELSE
                                   <Label>Client</Label>
                                   <Value>=Fields!Level_2.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6221,7 +6286,7 @@ ELSE
                                 <TextRun>
                                   <Value xml:space="preserve">             </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6230,7 +6295,7 @@ ELSE
                                   <Label>Project Client Display</Label>
                                   <Value>=Fields!Project_Client_Display.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6273,7 +6338,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Last Modified:      </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6282,7 +6347,7 @@ ELSE
                                   <Label>Last Modified</Label>
                                   <Value>=Fields!Last_Modified.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Format>d</Format>
@@ -6319,7 +6384,7 @@ ELSE
                                 <TextRun>
                                   <Value>Go Live:</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6353,7 +6418,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!GoLiveDate.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6405,7 +6470,7 @@ ELSE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>uspReportProjectStatus_PS</DataSetName>
+            <DataSetName>uspReportsProjectStatus_PS</DataSetName>
             <Top>0.28336in</Top>
             <Left>6.51953in</Left>
             <Height>1.26in</Height>
@@ -6415,6 +6480,863 @@ ELSE
               <Border>
                 <Style>None</Style>
               </Border>
+            </Style>
+          </Tablix>
+          <Tablix Name="Tablix4">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>3.7216in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.66604in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.7in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox14">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Open Action Items</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Width>1.25pt</Width>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>3</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.1875in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ActiveRisks2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(CountRows("Tablix4") = 0, "Action" &amp; vbCrLf &amp; "  None", "Action Item")</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox43">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Priority</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox42</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox46">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Due Date</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox44</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.1875in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Title3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Title.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Title</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Hyperlink>=Fields!URL.Value</Hyperlink>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Risk_Impact2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Priority.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Risk_Impact</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Due_Date3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DueDate.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Due_Date</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details13" />
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>uspReportsProjectStatus_ActionItemsDecisions_copyofBrokenSP</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Fields!Item.Value</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue>Action</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
+            <Top>3.32251in</Top>
+            <Left>0.12069in</Left>
+            <Height>0.625in</Height>
+            <Width>5.08764in</Width>
+            <ZIndex>18</ZIndex>
+            <Visibility>
+              <Hidden>=Parameters!ParmDisplayItemsDecisions.Value</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </TopBorder>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <FontWeight>Bold</FontWeight>
+            </Style>
+          </Tablix>
+          <Tablix Name="Tablix19">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>2.42942in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.29218in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.66604in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.7in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox15">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Open Decisions</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Width>1.25pt</Width>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>#d6ebff</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>4</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.1875in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ActiveRisks3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(CountRows("Tablix19") = 0, "Decision" &amp; vbCrLf &amp; "  None", "Decision")</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox41">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Decision Maker</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox40</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox47">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Priority</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox42</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox48">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Due Date</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox44</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>None</Style>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.1875in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Title4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Title.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>Blue</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Title</rd:DefaultName>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Hyperlink>=Fields!URL.Value</Hyperlink>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Risk_Probability3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DecisionMaker.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>P0</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Risk_Probability</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Risk_Impact3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Priority.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Risk_Impact</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Due_Date4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DueDate.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Due_Date</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details19" />
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>uspReportsProjectStatus_ActionItemsDecisions_copyofBrokenSP</DataSetName>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Fields!Item.Value</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue>Decision</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
+            <Top>3.32251in</Top>
+            <Left>5.36792in</Left>
+            <Height>0.625in</Height>
+            <Width>5.08764in</Width>
+            <ZIndex>19</ZIndex>
+            <Visibility>
+              <Hidden>=Parameters!ParmDisplayItemsDecisions.Value</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </TopBorder>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+              <FontWeight>Bold</FontWeight>
             </Style>
           </Tablix>
         </ReportItems>
@@ -6454,7 +7376,7 @@ ELSE
                     <TextRun>
                       <Value>Project Status Report</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>12pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -6491,7 +7413,7 @@ ELSE
                     <TextRun>
                       <Value>Reporting Period:  </Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
@@ -6500,7 +7422,7 @@ ELSE
                       <Label>Start</Label>
                       <Value>=Parameters!ParmReportingStart.Value</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -6509,7 +7431,7 @@ ELSE
                     <TextRun>
                       <Value> - </Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -6519,7 +7441,7 @@ ELSE
                       <Label>Finish</Label>
                       <Value>=Parameters!ParmReportingFinish.Value</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -6709,7 +7631,7 @@ ELSE
                       <Value>CONFIDENTIAL - Contains proprietary information. Not intended for external distribution.</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -6917,9 +7839,10 @@ ELSE
     <ReportParameter Name="UpcomingPeriod">
       <DataType>String</DataType>
       <DefaultValue>
-        <Values>
-          <Value>60 Days</Value>
-        </Values>
+        <DataSetReference>
+          <DataSetName>uspReportsProjectStatus_PS</DataSetName>
+          <ValueField>Upcoming_Period</ValueField>
+        </DataSetReference>
       </DefaultValue>
       <Prompt>Upcoming Period:</Prompt>
       <ValidValues>
@@ -7272,144 +8195,6 @@ ELSE
       </ValidValues>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>13</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>UserID</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ParmProject</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ParmProjectsAllowed</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>ParmActiveStatus</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>ParmProjectManager</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>ParmShellProjects</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>ParmProjectName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>ParmReportingStart</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>ParmReportingFinish</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>ParmBaselineNonBaseline</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>UpcomingPeriod</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>5</RowIndex>
-          <ParameterName>DisplayIssuesRisks</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>5</RowIndex>
-          <ParameterName>ParmDisplayItemsDecisions</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>6</RowIndex>
-          <ParameterName>ParmOverdueKeyTasks</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>6</RowIndex>
-          <ParameterName>ParmDeliverables</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>7</RowIndex>
-          <ParameterName>ParmAccomplishments</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>7</RowIndex>
-          <ParameterName>ParmUpcomingKeyTasks</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>8</RowIndex>
-          <ParameterName>ParmTaskComments</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>8</RowIndex>
-          <ParameterName>ParmDisplayProjectDescription</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>9</RowIndex>
-          <ParameterName>DisplayPMNotes</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>9</RowIndex>
-          <ParameterName>DisplaySchdCom</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>10</RowIndex>
-          <ParameterName>DisplayDelivCom</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>10</RowIndex>
-          <ParameterName>DisplayMilesCom</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>11</RowIndex>
-          <ParameterName>DisplayProjectOutcomesExpected</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>11</RowIndex>
-          <ParameterName>ParmLogo</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>12</RowIndex>
-          <ParameterName>ParmConfidential</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <EmbeddedImages>
     <EmbeddedImage Name="PerView_logo_small_154x29">
       <MIMEType>image/jpeg</MIMEType>

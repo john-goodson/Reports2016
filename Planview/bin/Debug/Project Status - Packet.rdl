@@ -207,7 +207,7 @@
                       <TextRun>
                         <Value>Project Status - Packet</Value>
                         <Style>
-                          <FontFamily>Tahoma</FontFamily>
+                          <FontFamily>Segoe UI Light</FontFamily>
                           <FontSize>12pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                           <TextDecoration>None</TextDecoration>

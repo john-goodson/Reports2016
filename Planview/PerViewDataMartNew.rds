@@ -3,6 +3,7 @@
   <ConnectionProperties>
     <Extension>SQL</Extension>
     <ConnectString>Data Source=xrdcwpdbsmsp03;Initial Catalog=PerViewDataMart</ConnectString>
+    <IntegratedSecurity>true</IntegratedSecurity>
   </ConnectionProperties>
   <DataSourceID>ab4cb0a7-a3b8-427c-bdd9-8d61212d76ff</DataSourceID>
 </RptDataSource>

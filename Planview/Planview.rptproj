@@ -53,10 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Report Include="Portfolio Project Status for Packet.rdl" />
+    <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
     <Report Include="Portfolio Status (Client - HCA).rdl" />
     <Report Include="Portfolio Status (Client - HCA)Copy.rdl" />
     <Report Include="Project Status - Packet.rdl" />
     <Report Include="Project Status.rdl" />
+    <Report Include="Project StatusOrig.rdl" />
+    <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>
