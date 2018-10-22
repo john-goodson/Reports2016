@@ -1776,7 +1776,6 @@ ELSE
                             <PaddingTop>3pt</PaddingTop>
                           </Style>
                         </Image>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>

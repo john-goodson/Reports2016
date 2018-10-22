@@ -19,23 +19,20 @@
           <QueryParameter Name="@ParmProjectSponsor">
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          <QueryParameter Name="@ParmClientSubsidiaries">
+            <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmClientSubsidiaries">
-            <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
+          <QueryParameter Name="@ParmBusinessOwner">
+            <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmProjectCategory">
             <Value>=Parameters!ParmProjectCategory.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmFunctionalArea">
             <Value>=Parameters!ParmFunctionalArea.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmBusinessOwner">
-            <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmServiceLine">
             <Value>=Parameters!ParmServiceLine.Value</Value>
@@ -47,57 +44,72 @@
             <Value>=Parameters!ParmFundingSource.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmShellProjects = 'No'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Yes'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Only'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName</CommandText>
+        <CommandText>
+          IF @ParmShellProjects = 'No'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	perviewdataMart.dbo.dim_project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+
+          and p.epm_platform = 'PerView'
+
+          ORDER BY p.ProjectName
+          IF @ParmShellProjects = 'Yes'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	perviewdataMart.dbo.dim_project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+          ORDER BY p.ProjectName
+          IF @ParmShellProjects = 'Only'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	perviewdataMart.dbo.dim_project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+          ORDER BY p.ProjectName
+        </CommandText>
       </Query>
+      <Fields>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectUID">
+          <DataField>ProjectUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
     <DataSet Name="uspReportsPortfolioStatus_Client_HCA">
       <Query>
@@ -117,10 +129,11 @@ IF @ParmShellProjects = 'Only'
           </QueryParameter>
           <QueryParameter Name="@ParmIncludePlanView">
             <Value>=Parameters!ParmIncludePlanView.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>uspReportsPortfolioStatus(Client-HCA)</CommandText>
+        <CommandText>uspReportsPortfolioStatus(Client-HCA)_new</CommandText>
       </Query>
       <Fields>
         <Field Name="Start">
@@ -138,6 +151,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="ProjectUID">
           <DataField>ProjectUID</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="puid">
+          <DataField>puid</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ProjectName">
           <DataField>ProjectName</DataField>
@@ -271,6 +288,10 @@ IF @ParmShellProjects = 'Only'
           <DataField>TaskFinishDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="sortOrder">
+          <DataField>sortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="ProjectPercentCompleted">
           <DataField>ProjectPercentCompleted</DataField>
           <rd:TypeName>System.Int16</rd:TypeName>
@@ -311,22 +332,26 @@ IF @ParmShellProjects = 'Only'
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>-- PM4 - Project Manager  for picking the PM
-SELECT	DISTINCT p.ProjectOwnerName, p.ProjectOwnerResourceUID
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		--AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		--AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN ('Leveraging Scale'))
-		--AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		--AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN ('Tom YoEsle'))
-		--AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-		--AND ProjectOwnerResourceUID &lt;&gt; '0000000D-0000-0000-0000-000000000000'
-ORDER BY p.ProjectOwnerName
-</CommandText>
+        <CommandText>
+          -- PM4 - Project Manager  for picking the PM
+          SELECT	DISTINCT p.ProjectOwnerName, p.ProjectOwnerResourceUID
+
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          and p.epm_platform = 'PerView'
+          --AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN ('Leveraging Scale'))
+          --AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          --AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN ('Tom YoEsle'))
+          --AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          --AND ProjectOwnerResourceUID &lt;&gt; '0000000D-0000-0000-0000-000000000000'
+
+          and p.epm_platform = 'PerView'
+          ORDER BY p.ProjectOwnerName
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectOwnerName">
@@ -343,19 +368,19 @@ ORDER BY p.ProjectOwnerName
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>	SELECT	DISTINCT ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') AS ProjectSponsor
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-ORDER BY [ProjectSponsor]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') AS ProjectSponsor
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          and p.epm_platform = 'PerView'
+          ORDER BY [ProjectSponsor]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectSponsor">
@@ -368,9 +393,6 @@ ORDER BY [ProjectSponsor]</CommandText>
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
@@ -387,17 +409,22 @@ ORDER BY [ProjectSponsor]</CommandText>
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>	SELECT	DISTINCT ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') AS BusinessOwner
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-ORDER BY [BusinessOwner]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') AS BusinessOwner
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          and p.epm_platform = 'PerView'
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+
+          and p.epm_platform = 'PerView'
+          ORDER BY [BusinessOwner]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="BusinessOwner">
@@ -410,9 +437,6 @@ ORDER BY [BusinessOwner]</CommandText>
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
@@ -423,15 +447,18 @@ ORDER BY [BusinessOwner]</CommandText>
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') AS ProjectCategory
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-ORDER BY ProjectCategory</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') AS ProjectCategory
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          and p.epm_platform = 'PerView'
+          ORDER BY ProjectCategory
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectCategory">
@@ -444,9 +471,6 @@ ORDER BY ProjectCategory</CommandText>
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
@@ -460,16 +484,19 @@ ORDER BY ProjectCategory</CommandText>
             <Value>=Parameters!ParmProjectCategory.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') AS FunctionalArea
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-ORDER BY FunctionalArea</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') AS FunctionalArea
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          and p.epm_platform = 'PerView'
+          ORDER BY FunctionalArea
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="FunctionalArea">
@@ -481,8 +508,10 @@ ORDER BY FunctionalArea</CommandText>
     <DataSet Name="prm9_ProjectActiveStatus">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
-        <CommandText>SELECT	DISTINCT ISNULL([Project Active Status], N'&lt;N/A&gt;') AS ProjectActiveStatus
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL([Project Active Status], N'&lt;N/A&gt;') AS ProjectActiveStatus
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectActiveStatus">
@@ -495,21 +524,21 @@ FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)</CommandText>
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') AS ProjectClient
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') LIKE 'Parallon.HCA%'
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-ORDER BY [ProjectClient]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') AS ProjectClient
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') LIKE 'Parallon.HCA%'
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          and p.epm_platform = 'PerView'
+          ORDER BY [ProjectClient]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectClient">
@@ -521,12 +550,14 @@ ORDER BY [ProjectClient]</CommandText>
     <DataSet Name="prm0_UpcomingPeriod">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
-        <CommandText>select '15 Days' as Period, '15' as MemberValue union all
-select '30 Days' as Period, '30' as MemberValue union all
-select '45 Days' as Period, '45' as MemberValue union all
-select '60 Days' as Period, '60' as MemberValue union all
-select '90 Days' as Period, '90' as MemberValue union all
-select 'All Days' as Period, '365' as MemberValue </CommandText>
+        <CommandText>
+          select '15 Days' as Period, '15' as MemberValue union all
+          select '30 Days' as Period, '30' as MemberValue union all
+          select '45 Days' as Period, '45' as MemberValue union all
+          select '60 Days' as Period, '60' as MemberValue union all
+          select '90 Days' as Period, '90' as MemberValue union all
+          select 'All Days' as Period, '365' as MemberValue
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Period">
@@ -574,11 +605,13 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	3 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	3 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	3 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	3 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -595,11 +628,13 @@ WHERE	3 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	2 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	2 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	2 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	2 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -616,11 +651,13 @@ WHERE	2 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	1 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	1 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	1 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	1 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -637,11 +674,13 @@ WHERE	1 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	0 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	0 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	0 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	0 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -654,9 +693,6 @@ WHERE	0 NOT IN (@ParmUpcomingActivities)</CommandText>
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
@@ -676,19 +712,22 @@ WHERE	0 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') AS [Service Line]
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
-</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') AS [Service Line]
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+
+          and p.epm_platform = 'PerView'
+          ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Service_Line">
@@ -701,9 +740,6 @@ ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
@@ -720,21 +756,24 @@ ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>--Funding Source Picker
-SELECT	DISTINCT ISNULL(p.[Portfolio Funding Source], 'N/A') AS [Portfolio Funding Source]
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		--AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-		--AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-		--AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')</CommandText>
+        <CommandText>
+          --Funding Source Picker
+          SELECT	DISTINCT ISNULL(p.[Portfolio Funding Source], 'N/A') AS [Portfolio Funding Source]
+          --FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
+          WHERE	1=1
+          --AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          --AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          --AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          --AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          and p.epm_platform = 'PerView'
+          ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Portfolio_Funding_Source">
@@ -751,23 +790,25 @@ ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')</CommandText>
             <Value>=Parameters!ParmDisplayUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmDisplayUpcomingActivities = 'Yes'
-	SELECT	'Key Tasks' AS Label
-		  , 3 AS Value
-	UNION
-	SELECT	'Milestones' AS Label
-		  , 2 AS Value
-	UNION
-	SELECT	'Deliverables' AS Label
-		  , 1 AS Value
-	UNION
-	SELECT	'All Tasks' AS Label
-		  , 0 AS Value
-	ORDER BY 2 DESC
-ELSE
-	SELECT	'N/A' AS Label
-		  , 10 AS Value
-	ORDER BY 2 DESC</CommandText>
+        <CommandText>
+          IF @ParmDisplayUpcomingActivities = 'Yes'
+          SELECT	'Key Tasks' AS Label
+          , 3 AS Value
+          UNION
+          SELECT	'Milestones' AS Label
+          , 2 AS Value
+          UNION
+          SELECT	'Deliverables' AS Label
+          , 1 AS Value
+          UNION
+          SELECT	'All Tasks' AS Label
+          , 0 AS Value
+          ORDER BY 2 DESC
+          ELSE
+          SELECT	'N/A' AS Label
+          , 10 AS Value
+          ORDER BY 2 DESC
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Label">
@@ -855,10 +896,10 @@ ELSE
                   <Width>0.73344in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.3in</Width>
+                  <Width>2.38333in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.3in</Width>
+                  <Width>1.70625in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.276in</Width>
@@ -1479,7 +1520,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(Parameters!UpcomingPeriod.Value = 365, "Upcoming Activities   " &amp; "(All Days)", "Upcoming Activities   " &amp; "(" &amp; Parameters!UpcomingPeriod.Value &amp; " Days)")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1708,10 +1749,29 @@ ELSE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="Image3">
+                        <Image Name="Image7">
                           <Source>Embedded</Source>
-                          <Value>ReportIcon</Value>
+                          <Value>
+                            =iif(
+                            Fields!epm_platform.Value = "PerView", "ReportIcon","PlanViewSmall"
+
+                            )
+                          </Value>
+                          <MIMEType>image/jpeg</MIMEType>
                           <Sizing>Clip</Sizing>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Hyperlink>="https://perview.app.parallon.com/PWA/_layouts/15/ReportServer/RSViewerPage.aspx?rv:RelativeReportUrl=%2fPWA%2fProjectBICenter%2fAll%2520Reports%2fProject%2520Status.rdl&amp;rp%3aParmActiveStatus=In+Progress" + "&amp;" + "ParmProject=" + Fields!ProjectUID.Value</Hyperlink>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
+                          <CustomProperties>
+                            <CustomProperty>
+                              <Name>PlanViewSmallish</Name>
+                              <Value>PlanViewSmallish</Value>
+                            </CustomProperty>
+                          </CustomProperties>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1753,11 +1813,6 @@ ELSE
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundImage>
-                              <Source>External</Source>
-                              <Value>=iif(1=1,"HCA","HCA")</Value>
-                              <MIMEType>image/jpeg</MIMEType>
-                            </BackgroundImage>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2367,7 +2422,7 @@ ELSE
                                                   Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") ", "")
                                                 </Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -2408,7 +2463,7 @@ ELSE
                                               <TextRun>
                                                 <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -3129,145 +3184,29 @@ ELSE
               <TablixMembers>
                 <TablixMember>
                   <FixedData>true</FixedData>
-                  <KeepWithGroup>After</KeepWithGroup>
-                  <RepeatOnNewPage>true</RepeatOnNewPage>
+                </TablixMember>
+                <TablixMember />
+                <TablixMember>
+                  <Visibility>
+                    <Hidden>=IsNothing(Parameters!GroupBy2.Value)</Hidden>
+                  </Visibility>
                 </TablixMember>
                 <TablixMember>
-                  <Group Name="GroupBy1">
-                    <GroupExpressions>
-                      <GroupExpression>
-                        =SWITCH(
-                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
-                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
-                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                        Parameters!GroupBy1.Value = "Business Owner", Fields!Business_Owner.Value,
-                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                        )
-                      </GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>
-                        =SWITCH(
-                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
-                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
-                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                        Parameters!GroupBy1.Value = "Business Owner", Fields!Business_Owner.Value,
-                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                        )
-                      </Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <TablixMembers>
-                    <TablixMember>
-                      <KeepWithGroup>After</KeepWithGroup>
-                      <RepeatOnNewPage>true</RepeatOnNewPage>
-                    </TablixMember>
-                    <TablixMember>
-                      <Group Name="GroupBy2">
-                        <GroupExpressions>
-                          <GroupExpression>
-                            =SWITCH(
-                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
-                            Parameters!GroupBy2.value = "Project Category", Fields!ProjectCategory.Value,
-                            Parameters!GroupBy2.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                            Parameters!GroupBy2.Value = "Business Owner", Fields!Business_Owner.Value,
-                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
-                            )
-                          </GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>
-                            =SWITCH(
-                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
-                            Parameters!GroupBy2.value = "Project Category", Fields!ProjectCategory.Value,
-                            Parameters!GroupBy2.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                            Parameters!GroupBy2.Value = "Business Owner", Fields!Business_Owner.Value,
-                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
-                            )
-                          </Value>
-                        </SortExpression>
-                      </SortExpressions>
-                      <TablixMembers>
-                        <TablixMember>
-                          <Visibility>
-                            <Hidden>=IsNothing(Parameters!GroupBy2.Value)</Hidden>
-                          </Visibility>
-                          <KeepWithGroup>After</KeepWithGroup>
-                          <RepeatOnNewPage>true</RepeatOnNewPage>
-                        </TablixMember>
-                        <TablixMember>
-                          <Group Name="GroupBy3">
-                            <GroupExpressions>
-                              <GroupExpression>
-                                =SWITCH(
-                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
-                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
-                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                Parameters!GroupBy3.Value = "Business Owner", Fields!Business_Owner.Value,
-                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
-                                )
-                              </GroupExpression>
-                            </GroupExpressions>
-                          </Group>
-                          <SortExpressions>
-                            <SortExpression>
-                              <Value>
-                                =SWITCH(
-                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
-                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
-                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                Parameters!GroupBy3.Value = "Business Owner", Fields!Business_Owner.Value,
-                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
-                                )
-                              </Value>
-                            </SortExpression>
-                          </SortExpressions>
-                          <TablixMembers>
-                            <TablixMember>
-                              <Visibility>
-                                <Hidden>=IsNothing(Parameters!GroupBy3.Value)</Hidden>
-                              </Visibility>
-                              <KeepWithGroup>After</KeepWithGroup>
-                              <RepeatOnNewPage>true</RepeatOnNewPage>
-                            </TablixMember>
-                            <TablixMember>
-                              <Group Name="ProjectName">
-                                <GroupExpressions>
-                                  <GroupExpression>=Fields!ProjectName.Value</GroupExpression>
-                                </GroupExpressions>
-                              </Group>
-                              <TablixMembers>
-                                <TablixMember />
-                                <TablixMember />
-                              </TablixMembers>
-                            </TablixMember>
-                          </TablixMembers>
-                        </TablixMember>
-                      </TablixMembers>
-                    </TablixMember>
-                  </TablixMembers>
+                  <Visibility>
+                    <Hidden>=IsNothing(Parameters!GroupBy3.Value)</Hidden>
+                  </Visibility>
                 </TablixMember>
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
             <RepeatRowHeaders>true</RepeatRowHeaders>
             <NoRowsMessage>No Records Returned For Parameter Criteria You Have Selected</NoRowsMessage>
             <DataSetName>uspReportsPortfolioStatus_Client_HCA</DataSetName>
-            <SortExpressions>
-              <SortExpression>
-                <Value>=IIF(Parameters!ParmSortDetails.Value = "Project Name/Project Priority",Fields!ProjectName.Value,Fields!Project_Priority.Value)</Value>
-              </SortExpression>
-              <SortExpression>
-                <Value>=IIF(Parameters!ParmSortDetails.Value = "Project Name/Project Priority",Fields!Project_Priority.Value,Fields!ProjectName.Value)</Value>
-              </SortExpression>
-            </SortExpressions>
             <Top>0.03125in</Top>
             <Left>0.00651in</Left>
             <Height>1.45504in</Height>
-            <Width>13.67623in</Width>
+            <Width>15.16581in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3288,73 +3227,31 @@ ELSE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Subreport Name="PortfolioProjectStatusforPacket">
-                          <ReportName>Portfolio Project Status for Packet</ReportName>
-                          <Parameters>
-                            <Parameter Name="UserID">
-                              <Value>=Parameters!UserID.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmProjectName">
-                              <Value>=Fields!ProjectUID.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingStart">
-                              <Value>=Parameters!ParmReportingStart.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingFinish">
-                              <Value>=Parameters!ParmReportingFinish.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmBaselineNonBaseline">
-                              <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
-                            </Parameter>
-                            <Parameter Name="UpcomingPeriod">
-                              <Value>=Parameters!UpcomingPeriod.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayIssuesRisks">
-                              <Value>=Parameters!DisplayIssuesRisks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayItemsDecisions">
-                              <Value>=Parameters!ParmDisplayItemsDecisions.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmOverdueKeyTasks">
-                              <Value>=Parameters!ParmOverdueKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDeliverables">
-                              <Value>=Parameters!ParmDeliverables2.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmAccomplishments">
-                              <Value>=Parameters!ParmAccomplishments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmUpcomingKeyTasks">
-                              <Value>=Parameters!ParmUpcomingKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmTaskComments">
-                              <Value>=Parameters!ParmTaskComments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayProjectDescription">
-                              <Value>=Parameters!ParmDisplayProjectDescription.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayPMNotes">
-                              <Value>=Parameters!DisplayPMNotes.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplaySchdCom">
-                              <Value>=Parameters!DisplaySchdCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayDelivCom">
-                              <Value>=Parameters!DisplayDelivCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayMilesCom">
-                              <Value>=Parameters!DisplayMilesCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayProjectOutcomesExpected">
-                              <Value>=Parameters!DisplayProjectOutcomesExpected.Value</Value>
-                            </Parameter>
-                          </Parameters>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
-                        </Subreport>
+                        </Textbox>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3399,7 +3296,7 @@ ELSE
         <Height>1.79879in</Height>
         <Style />
       </Body>
-      <Width>14.05716in</Width>
+      <Width>16.65149in</Width>
       <Page>
         <PageHeader>
           <Height>0.30208in</Height>
@@ -3533,14 +3430,16 @@ ELSE
           <ReportItems>
             <Image Name="Image2">
               <Source>Embedded</Source>
-              <Value>=SWITCH(
-Parameters!ParmLogo.Value = 0, "Poweredby",
-Parameters!ParmLogo.Value = 1, "HealthTrust",
-Parameters!ParmLogo.Value = 2, "HCA",
-Parameters!ParmLogo.Value = 3, "CaseManagement",
-Parameters!ParmLogo.Value = 4, "PerformanceImprovement",
-Parameters!ParmLogo.Value = 5, "HCAHR"
-)</Value>
+              <Value>
+                =SWITCH(
+                Parameters!ParmLogo.Value = 0, "Poweredby",
+                Parameters!ParmLogo.Value = 1, "HealthTrust",
+                Parameters!ParmLogo.Value = 2, "HCA",
+                Parameters!ParmLogo.Value = 3, "CaseManagement",
+                Parameters!ParmLogo.Value = 4, "PerformanceImprovement",
+                Parameters!ParmLogo.Value = 5, "HCAHR"
+                )
+              </Value>
               <Sizing>FitProportional</Sizing>
               <Top>0.06348in</Top>
               <Height>0.3418in</Height>
@@ -3798,6 +3697,11 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     </ReportParameter>
     <ReportParameter Name="UpcomingPeriod">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>15 Days</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Upcoming Period:</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3810,6 +3714,11 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     </ReportParameter>
     <ReportParameter Name="GroupBy1">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Project Client</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>1st Group By:</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -3841,7 +3750,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
       <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+          <Value>Project Sponsor</Value>
         </Values>
       </DefaultValue>
       <Prompt>2nd Group By:</Prompt>
@@ -3952,10 +3861,9 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     <ReportParameter Name="ParmProjectSponsor">
       <DataType>String</DataType>
       <DefaultValue>
-        <DataSetReference>
-          <DataSetName>prm5_ProjectSponsor</DataSetName>
-          <ValueField>ProjectSponsor</ValueField>
-        </DataSetReference>
+        <Values>
+          <Value>Jane Englebright</Value>
+        </Values>
       </DefaultValue>
       <Prompt>Project Sponsor:</Prompt>
       <ValidValues>
@@ -3970,6 +3878,11 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     </ReportParameter>
     <ReportParameter Name="ParmProjectClient">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Parallon.HCA</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Project Client:</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3984,7 +3897,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>Yes</Value>
+          <Value>No</Value>
         </Values>
       </DefaultValue>
       <Prompt>Include Subsidiaries:</Prompt>
@@ -4132,7 +4045,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>=IIF(Parameters!ParmDisplayUpcomingActivities.Value = "YES","",10)</Value>
+          <Value>2</Value>
         </Values>
       </DefaultValue>
       <Prompt>Upcoming Activities to Include:</Prompt>

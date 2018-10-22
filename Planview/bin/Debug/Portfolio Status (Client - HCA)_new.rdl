@@ -13,91 +13,42 @@
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmShellProjects">
-            <Value>=Parameters!ParmShellProjects.Value</Value>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmProjectSponsor">
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmClientSubsidiaries">
-            <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmProjectCategory">
-            <Value>=Parameters!ParmProjectCategory.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmFunctionalArea">
-            <Value>=Parameters!ParmFunctionalArea.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmBusinessOwner">
-            <Value>=Parameters!ParmBusinessOwner.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmServiceLine">
-            <Value>=Parameters!ParmServiceLine.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmProjectManager">
-            <Value>=Parameters!ParmProjectManager.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmFundingSource">
-            <Value>=Parameters!ParmFundingSource.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmShellProjects = 'No'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+        <CommandText>SELECT	DISTINCT p.ProjectName, p.ProjectUID  
+	FROM	PerViewDataMart.dbo.dim_project p WITH (NOLOCK)
 	WHERE	1=1
+	--and ppl_code is not null
 			AND p.ProjectUID IN (@ParmProjectsAllowed)
 			AND (p.ProjectType IN (0,5,6))
 			AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN ('In Progress'))
 			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Yes'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Only'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+			--AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+			--AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+			--AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+			--AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+			--AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+			--AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+			--AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+			--and ppl_code is not null
 	ORDER BY p.ProjectName</CommandText>
       </Query>
+      <Fields>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectUID">
+          <DataField>ProjectUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
     <DataSet Name="uspReportsPortfolioStatus_Client_HCA">
       <Query>
@@ -117,10 +68,11 @@ IF @ParmShellProjects = 'Only'
           </QueryParameter>
           <QueryParameter Name="@ParmIncludePlanView">
             <Value>=Parameters!ParmIncludePlanView.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>uspReportsPortfolioStatus(Client-HCA)</CommandText>
+        <CommandText>uspReportsPortfolioStatus(Client-HCA)_new</CommandText>
       </Query>
       <Fields>
         <Field Name="Start">
@@ -138,6 +90,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="ProjectUID">
           <DataField>ProjectUID</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="puid">
+          <DataField>puid</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ProjectName">
           <DataField>ProjectName</DataField>
@@ -270,6 +226,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="TaskFinishDate">
           <DataField>TaskFinishDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="sortOrder">
+          <DataField>sortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="ProjectPercentCompleted">
           <DataField>ProjectPercentCompleted</DataField>
@@ -1479,7 +1439,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(Parameters!UpcomingPeriod.Value = 365, "Upcoming Activities   " &amp; "(All Days)", "Upcoming Activities   " &amp; "(" &amp; Parameters!UpcomingPeriod.Value &amp; " Days)")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1708,10 +1668,27 @@ ELSE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="Image3">
+                        <Image Name="Image7">
                           <Source>Embedded</Source>
-                          <Value>ReportIcon</Value>
+                          <Value>=iif(
+Fields!epm_platform.Value = "PerView", "ReportIcon","PlanViewSmall"
+
+)</Value>
+                          <MIMEType>image/jpeg</MIMEType>
                           <Sizing>Clip</Sizing>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Hyperlink>="https://perview.app.parallon.com/PWA/_layouts/15/ReportServer/RSViewerPage.aspx?rv:RelativeReportUrl=%2fPWA%2fProjectBICenter%2fAll%2520Reports%2fProject%2520Status.rdl&amp;rp%3aParmActiveStatus=In+Progress" + "&amp;" + "ParmProject=" + Fields!ProjectUID.Value</Hyperlink>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
+                          <CustomProperties>
+                            <CustomProperty>
+                              <Name>PlanViewSmallish</Name>
+                              <Value>PlanViewSmallish</Value>
+                            </CustomProperty>
+                          </CustomProperties>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1753,11 +1730,6 @@ ELSE
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundImage>
-                              <Source>External</Source>
-                              <Value>=iif(1=1,"HCA","HCA")</Value>
-                              <MIMEType>image/jpeg</MIMEType>
-                            </BackgroundImage>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2367,7 +2339,7 @@ ELSE
                                                   Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") ", "")
                                                 </Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -2408,7 +2380,7 @@ ELSE
                                               <TextRun>
                                                 <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -3135,15 +3107,13 @@ ELSE
                 <TablixMember>
                   <Group Name="GroupBy1">
                     <GroupExpressions>
-                      <GroupExpression>
-                        =SWITCH(
+                      <GroupExpression>=SWITCH(
                         Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
                         Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
                         Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                        Parameters!GroupBy1.Value = "Business Owner", Fields!Business_Owner.Value,
+                        
                         Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                        )
-                      </GroupExpression>
+                        )</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
@@ -3167,15 +3137,13 @@ ELSE
                     <TablixMember>
                       <Group Name="GroupBy2">
                         <GroupExpressions>
-                          <GroupExpression>
-                            =SWITCH(
-                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
-                            Parameters!GroupBy2.value = "Project Category", Fields!ProjectCategory.Value,
-                            Parameters!GroupBy2.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                            Parameters!GroupBy2.Value = "Business Owner", Fields!Business_Owner.Value,
-                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
-                            )
-                          </GroupExpression>
+                          <GroupExpression>=SWITCH(
+                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+                        
+                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                        )</GroupExpression>
                         </GroupExpressions>
                       </Group>
                       <SortExpressions>
@@ -3202,15 +3170,13 @@ ELSE
                         <TablixMember>
                           <Group Name="GroupBy3">
                             <GroupExpressions>
-                              <GroupExpression>
-                                =SWITCH(
-                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
-                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
-                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                Parameters!GroupBy3.Value = "Business Owner", Fields!Business_Owner.Value,
-                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
-                                )
-                              </GroupExpression>
+                              <GroupExpression>=SWITCH(
+                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+                        
+                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                        )</GroupExpression>
                             </GroupExpressions>
                           </Group>
                           <SortExpressions>
@@ -3288,73 +3254,31 @@ ELSE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Subreport Name="PortfolioProjectStatusforPacket">
-                          <ReportName>Portfolio Project Status for Packet</ReportName>
-                          <Parameters>
-                            <Parameter Name="UserID">
-                              <Value>=Parameters!UserID.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmProjectName">
-                              <Value>=Fields!ProjectUID.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingStart">
-                              <Value>=Parameters!ParmReportingStart.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingFinish">
-                              <Value>=Parameters!ParmReportingFinish.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmBaselineNonBaseline">
-                              <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
-                            </Parameter>
-                            <Parameter Name="UpcomingPeriod">
-                              <Value>=Parameters!UpcomingPeriod.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayIssuesRisks">
-                              <Value>=Parameters!DisplayIssuesRisks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayItemsDecisions">
-                              <Value>=Parameters!ParmDisplayItemsDecisions.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmOverdueKeyTasks">
-                              <Value>=Parameters!ParmOverdueKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDeliverables">
-                              <Value>=Parameters!ParmDeliverables2.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmAccomplishments">
-                              <Value>=Parameters!ParmAccomplishments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmUpcomingKeyTasks">
-                              <Value>=Parameters!ParmUpcomingKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmTaskComments">
-                              <Value>=Parameters!ParmTaskComments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayProjectDescription">
-                              <Value>=Parameters!ParmDisplayProjectDescription.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayPMNotes">
-                              <Value>=Parameters!DisplayPMNotes.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplaySchdCom">
-                              <Value>=Parameters!DisplaySchdCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayDelivCom">
-                              <Value>=Parameters!DisplayDelivCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayMilesCom">
-                              <Value>=Parameters!DisplayMilesCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayProjectOutcomesExpected">
-                              <Value>=Parameters!DisplayProjectOutcomesExpected.Value</Value>
-                            </Parameter>
-                          </Parameters>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
-                        </Subreport>
+                        </Textbox>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3798,6 +3722,11 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     </ReportParameter>
     <ReportParameter Name="UpcomingPeriod">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>60 Days</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Upcoming Period:</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3841,7 +3770,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
       <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+          <Value>Project Client</Value>
         </Values>
       </DefaultValue>
       <Prompt>2nd Group By:</Prompt>
@@ -3951,12 +3880,6 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
     </ReportParameter>
     <ReportParameter Name="ParmProjectSponsor">
       <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>prm5_ProjectSponsor</DataSetName>
-          <ValueField>ProjectSponsor</ValueField>
-        </DataSetReference>
-      </DefaultValue>
       <Prompt>Project Sponsor:</Prompt>
       <ValidValues>
         <DataSetReference>

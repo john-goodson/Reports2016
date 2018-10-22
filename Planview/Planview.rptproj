@@ -52,13 +52,20 @@
     <DataSource Include="PerViewDataMartNew.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="copyoforiginal.rdl" />
     <Report Include="Portfolio Project Status for Packet.rdl" />
     <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
     <Report Include="Portfolio Status (Client - HCA).rdl" />
     <Report Include="Portfolio Status (Client - HCA)Copy.rdl" />
+    <Report Include="Portfolio Status (Client - HCA)_new.rdl" />
     <Report Include="Project Status - Packet.rdl" />
     <Report Include="Project Status.rdl" />
     <Report Include="Project StatusOrig.rdl" />
+    <Report Include="Report1.rdl" />
+    <Report Include="Report2.rdl" />
+    <Report Include="Report3.rdl" />
+    <Report Include="Report4.rdl" />
+    <Report Include="Upgraded Portfolio Status (Client - HCA) - Copy.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />

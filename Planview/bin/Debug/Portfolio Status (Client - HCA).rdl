@@ -115,6 +115,9 @@ IF @ParmShellProjects = 'Only'
           <QueryParameter Name="@ParmBaselineNonBaseline">
             <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmIncludePlanView">
+            <Value>=Parameters!ParmIncludePlanView.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>uspReportsPortfolioStatus(Client-HCA)</CommandText>
@@ -218,7 +221,7 @@ IF @ParmShellProjects = 'Only'
         </Field>
         <Field Name="TaskPercentCompleted">
           <DataField>TaskPercentCompleted</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="TaskBaselineFinish">
           <DataField>TaskBaselineFinish</DataField>
@@ -238,7 +241,7 @@ IF @ParmShellProjects = 'Only'
         </Field>
         <Field Name="TaskIsMilestone">
           <DataField>TaskIsMilestone</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TaskDeliverableStartDate">
           <DataField>TaskDeliverableStartDate</DataField>

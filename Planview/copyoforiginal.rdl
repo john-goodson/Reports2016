@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -16,14 +16,8 @@
           <QueryParameter Name="@ParmShellProjects">
             <Value>=Parameters!ParmShellProjects.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmProjectSponsor">
-            <Value>=Parameters!ParmProjectSponsor.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ParmProjectsAllowed">
             <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
@@ -34,6 +28,9 @@
           <QueryParameter Name="@ParmFunctionalArea">
             <Value>=Parameters!ParmFunctionalArea.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmProjectSponsor">
+            <Value>=Parameters!ParmProjectSponsor.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmBusinessOwner">
             <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
@@ -43,61 +40,76 @@
           <QueryParameter Name="@ParmProjectManager">
             <Value>=Parameters!ParmProjectManager.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmActiveStatus">
+            <Value>=Parameters!ParmActiveStatus.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmFundingSource">
             <Value>=Parameters!ParmFundingSource.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmShellProjects = 'No'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Yes'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName
-IF @ParmShellProjects = 'Only'
-	SELECT	DISTINCT p.ProjectName, p.ProjectUID
-	FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (p.ProjectType IN (0,5,6))
-			AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
-			AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-			AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-			AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-			AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-			AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-			AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-			AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
-	ORDER BY p.ProjectName</CommandText>
+        <CommandText>
+          IF @ParmShellProjects = 'No'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+          ORDER BY p.ProjectName
+          IF @ParmShellProjects = 'Yes'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+          ORDER BY p.ProjectName
+          IF @ParmShellProjects = 'Only'
+          SELECT	DISTINCT p.ProjectName, p.ProjectUID
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (p.ProjectType IN (0,5,6))
+          AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          AND (ISNULL(p.[Portfolio Funding Source], 'N/A') IN (@ParmFundingSource))
+          ORDER BY p.ProjectName
+        </CommandText>
       </Query>
+      <Fields>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectUID">
+          <DataField>ProjectUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
     <DataSet Name="uspReportsPortfolioStatus_Client_HCA">
       <Query>
@@ -120,7 +132,7 @@ IF @ParmShellProjects = 'Only'
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>uspReportsPortfolioStatus(Client-HCA)</CommandText>
+        <CommandText>uspReportsPortfolioStatus(Client-HCA)_new</CommandText>
       </Query>
       <Fields>
         <Field Name="Start">
@@ -138,6 +150,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="ProjectUID">
           <DataField>ProjectUID</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="puid">
+          <DataField>puid</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ProjectName">
           <DataField>ProjectName</DataField>
@@ -198,6 +214,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="PM_Allocation">
           <DataField>PM Allocation</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="epm_platform">
+          <DataField>epm_platform</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Project_Priority">
           <DataField>Project Priority</DataField>
@@ -271,6 +291,10 @@ IF @ParmShellProjects = 'Only'
           <DataField>TaskFinishDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="sortOrder">
+          <DataField>sortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="ProjectPercentCompleted">
           <DataField>ProjectPercentCompleted</DataField>
           <rd:TypeName>System.Int16</rd:TypeName>
@@ -291,42 +315,52 @@ IF @ParmShellProjects = 'Only'
           <DataField>Portfolio Funding Source</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="epm_platform">
-          <DataField>epm_platform</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
-        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="prm4_ProjectManager">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmProjectSponsor">
-            <Value>=Parameters!ParmProjectSponsor.Value</Value>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmClientSubsidiaries">
             <Value>=Parameters!ParmClientSubsidiaries.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmActiveStatus">
+            <Value>=Parameters!ParmActiveStatus.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmFunctionalArea">
+            <Value>=Parameters!ParmFunctionalArea.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectCategory">
+            <Value>=Parameters!ParmProjectCategory.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectSponsor">
+            <Value>=Parameters!ParmProjectSponsor.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmBusinessOwner">
+            <Value>=Parameters!ParmBusinessOwner.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmServiceLine">
+            <Value>=Parameters!ParmServiceLine.Value</Value>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>-- PM4 - Project Manager  for picking the PM
-SELECT	DISTINCT p.ProjectOwnerName, p.ProjectOwnerResourceUID
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		--AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		--AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN ('Leveraging Scale'))
-		--AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		--AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN ('Tom YoEsle'))
-		--AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-		--AND ProjectOwnerResourceUID &lt;&gt; '0000000D-0000-0000-0000-000000000000'
-ORDER BY p.ProjectOwnerName
-</CommandText>
+        <CommandText>
+          SELECT	DISTINCT p.ProjectOwnerName, p.ProjectOwnerResourceUID
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND ProjectOwnerResourceUID &lt;&gt; '0000000D-0000-0000-0000-000000000000'
+          ORDER BY p.ProjectOwnerName
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectOwnerName">
@@ -350,12 +384,14 @@ ORDER BY p.ProjectOwnerName
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>	SELECT	DISTINCT ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') AS ProjectSponsor
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-ORDER BY [ProjectSponsor]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') AS ProjectSponsor
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          ORDER BY [ProjectSponsor]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectSponsor">
@@ -387,17 +423,18 @@ ORDER BY [ProjectSponsor]</CommandText>
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>	SELECT	DISTINCT ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') AS BusinessOwner
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-ORDER BY [BusinessOwner]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') AS BusinessOwner
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          ORDER BY [BusinessOwner]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="BusinessOwner">
@@ -423,15 +460,16 @@ ORDER BY [BusinessOwner]</CommandText>
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') AS ProjectCategory
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-ORDER BY ProjectCategory</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') AS ProjectCategory
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          ORDER BY ProjectCategory
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectCategory">
@@ -460,16 +498,17 @@ ORDER BY ProjectCategory</CommandText>
             <Value>=Parameters!ParmProjectCategory.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') AS FunctionalArea
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-ORDER BY FunctionalArea</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') AS FunctionalArea
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          ORDER BY FunctionalArea
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="FunctionalArea">
@@ -481,8 +520,18 @@ ORDER BY FunctionalArea</CommandText>
     <DataSet Name="prm9_ProjectActiveStatus">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
-        <CommandText>SELECT	DISTINCT ISNULL([Project Active Status], N'&lt;N/A&gt;') AS ProjectActiveStatus
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@ParmProjectsAllowed">
+            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+          SELECT	DISTINCT ISNULL([Project Active Status], N'&lt;N/A&gt;') AS ProjectActiveStatus
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          ORDER BY [ProjectActiveStatus]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectActiveStatus">
@@ -502,14 +551,15 @@ FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)</CommandText>
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') AS ProjectClient
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') LIKE 'Parallon.HCA%'
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-ORDER BY [ProjectClient]</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') AS ProjectClient
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') LIKE 'Parallon.HCA%'
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          ORDER BY [ProjectClient]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="ProjectClient">
@@ -521,12 +571,21 @@ ORDER BY [ProjectClient]</CommandText>
     <DataSet Name="prm0_UpcomingPeriod">
       <Query>
         <DataSourceName>PerViewDataMart</DataSourceName>
-        <CommandText>select '15 Days' as Period, '15' as MemberValue union all
-select '30 Days' as Period, '30' as MemberValue union all
-select '45 Days' as Period, '45' as MemberValue union all
-select '60 Days' as Period, '60' as MemberValue union all
-select '90 Days' as Period, '90' as MemberValue union all
-select 'All Days' as Period, '365' as MemberValue </CommandText>
+        <CommandText>
+          SELECT [MemberValue] AS Period
+          ,CASE
+          WHEN [MemberValue]= '15 Days' THEN 15
+          WHEN [MemberValue]= '30 Days' THEN 30
+          WHEN [MemberValue]= '45 Days' THEN 45
+          WHEN [MemberValue]= '60 Days' THEN 60
+          WHEN [MemberValue]= '90 Days' THEN 90
+          WHEN [MemberValue]= 'All Days' THEN 365
+          ELSE 15
+          END AS [MemberValue]
+          FROM ProjectWebApp.dbo.[MSPLT_Upcoming Period_UserView] WITH (NOLOCK)
+          WHERE [MemberValue] IS NOT NULL
+          ORDER BY [MemberValue]
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Period">
@@ -535,7 +594,7 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
         </Field>
         <Field Name="MemberValue">
           <DataField>MemberValue</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -574,11 +633,13 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	3 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	3 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	3 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	3 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -595,11 +656,13 @@ WHERE	3 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	2 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	2 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	2 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	2 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -616,11 +679,13 @@ WHERE	2 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	1 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	1 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	1 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	1 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -637,11 +702,13 @@ WHERE	1 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	'Yes' AS TaskValue
-WHERE	0 IN (@ParmUpcomingActivities)
-UNION
-SELECT	'No' AS TaskValue
-WHERE	0 NOT IN (@ParmUpcomingActivities)</CommandText>
+        <CommandText>
+          SELECT	'Yes' AS TaskValue
+          WHERE	0 IN (@ParmUpcomingActivities)
+          UNION
+          SELECT	'No' AS TaskValue
+          WHERE	0 NOT IN (@ParmUpcomingActivities)
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="TaskValue">
@@ -676,19 +743,19 @@ WHERE	0 NOT IN (@ParmUpcomingActivities)</CommandText>
             <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT	DISTINCT ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') AS [Service Line]
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
-</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') AS [Service Line]
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Service_Line">
@@ -710,31 +777,40 @@ ORDER BY ISNULL(p.[Service Line], N'&lt;No Service Line&gt;')
           <QueryParameter Name="@ParmProjectCategory">
             <Value>=Parameters!ParmProjectCategory.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmFunctionalArea">
+            <Value>=Parameters!ParmFunctionalArea.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmProjectSponsor">
             <Value>=Parameters!ParmProjectSponsor.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ParmBusinessOwner">
             <Value>=Parameters!ParmBusinessOwner.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmServiceLine">
+            <Value>=Parameters!ParmServiceLine.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ParmProjectManager">
+            <Value>=Parameters!ParmProjectManager.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@ParmActiveStatus">
             <Value>=Parameters!ParmActiveStatus.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>--Funding Source Picker
-SELECT	DISTINCT ISNULL(p.[Portfolio Funding Source], 'N/A') AS [Portfolio Funding Source]
---FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
-FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-WHERE	1=1
-		AND p.ProjectUID IN (@ParmProjectsAllowed)
-		AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
-		AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
-		AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
-		--AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
-		AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
-		AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
-		--AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
-		--AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')</CommandText>
+        <CommandText>
+          SELECT	DISTINCT ISNULL(p.[Portfolio Funding Source], 'N/A') AS [Portfolio Funding Source]
+          FROM	ProjectWebApp.dbo.MSP_EpmProject_UserView p WITH (NOLOCK)
+          WHERE	1=1
+          AND p.ProjectUID IN (@ParmProjectsAllowed)
+          AND (ISNULL(p.[Project Active Status], N'&lt;N/A&gt;') IN (@ParmActiveStatus))
+          AND (ISNULL(p.[Project Client], N'&lt;No Project Client&gt;') IN (@ParmClientSubsidiaries))
+          AND (ISNULL(p.[Project Category], N'&lt;No Project Category&gt;') IN (@ParmProjectCategory))
+          AND (ISNULL(p.[Functional Area], N'&lt;No Functional Area&gt;') IN (@ParmFunctionalArea))
+          AND (ISNULL(p.[Project Sponsor], N'&lt;N/A&gt;') IN (@ParmProjectSponsor))
+          AND (ISNULL(p.[Business Owner], N'&lt;No Business Owner&gt;') IN (@ParmBusinessOwner))
+          AND (ISNULL(p.[Service Line], N'&lt;No Service Line&gt;') IN (@ParmServiceLine))
+          AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
+          ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Portfolio_Funding_Source">
@@ -751,23 +827,25 @@ ORDER BY ISNULL(p.[Portfolio Funding Source], 'N/A')</CommandText>
             <Value>=Parameters!ParmDisplayUpcomingActivities.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmDisplayUpcomingActivities = 'Yes'
-	SELECT	'Key Tasks' AS Label
-		  , 3 AS Value
-	UNION
-	SELECT	'Milestones' AS Label
-		  , 2 AS Value
-	UNION
-	SELECT	'Deliverables' AS Label
-		  , 1 AS Value
-	UNION
-	SELECT	'All Tasks' AS Label
-		  , 0 AS Value
-	ORDER BY 2 DESC
-ELSE
-	SELECT	'N/A' AS Label
-		  , 10 AS Value
-	ORDER BY 2 DESC</CommandText>
+        <CommandText>
+          IF @ParmDisplayUpcomingActivities = 'Yes'
+          SELECT	'Key Tasks' AS Label
+          , 3 AS Value
+          UNION
+          SELECT	'Milestones' AS Label
+          , 2 AS Value
+          UNION
+          SELECT	'Deliverables' AS Label
+          , 1 AS Value
+          UNION
+          SELECT	'All Tasks' AS Label
+          , 0 AS Value
+          ORDER BY 2 DESC
+          ELSE
+          SELECT	'N/A' AS Label
+          , 10 AS Value
+          ORDER BY 2 DESC
+        </CommandText>
       </Query>
       <Fields>
         <Field Name="Label">
@@ -882,8 +960,8 @@ ELSE
                                 <TextRun>
                                   <Value>Project Name</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -901,7 +979,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -924,8 +1002,8 @@ ELSE
                                 <TextRun>
                                   <Value>Project Manager</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -942,7 +1020,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -963,8 +1041,8 @@ ELSE
                                 <TextRun>
                                   <Value>Business</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -979,8 +1057,8 @@ ELSE
                                 <TextRun>
                                   <Value>Owner</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -997,7 +1075,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1018,8 +1096,8 @@ ELSE
                                 <TextRun>
                                   <Value>PM Allocation</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1036,7 +1114,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1057,8 +1135,8 @@ ELSE
                                 <TextRun>
                                   <Value>Project Priority</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1075,7 +1153,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1096,8 +1174,8 @@ ELSE
                                 <TextRun>
                                   <Value>FDI</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1114,7 +1192,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1135,8 +1213,8 @@ ELSE
                                 <TextRun>
                                   <Value>%</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1151,8 +1229,8 @@ ELSE
                                 <TextRun>
                                   <Value>Comp</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1169,7 +1247,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1190,8 +1268,8 @@ ELSE
                                 <TextRun>
                                   <Value>Start</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1208,7 +1286,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1229,8 +1307,8 @@ ELSE
                                 <TextRun>
                                   <Value>Finish</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1247,7 +1325,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1268,8 +1346,8 @@ ELSE
                                 <TextRun>
                                   <Value>PM Status</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1286,7 +1364,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1307,8 +1385,8 @@ ELSE
                                 <TextRun>
                                   <Value>Funding</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1323,8 +1401,8 @@ ELSE
                                 <TextRun>
                                   <Value>Source</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1341,7 +1419,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1362,8 +1440,8 @@ ELSE
                                 <TextRun>
                                   <Value>Executive Status Summary</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1380,7 +1458,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1401,8 +1479,8 @@ ELSE
                                 <TextRun>
                                   <Value>Project Outcomes Expected</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1419,7 +1497,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1440,8 +1518,8 @@ ELSE
                                 <TextRun>
                                   <Value>PM Notes</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1458,7 +1536,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1479,8 +1557,8 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(Parameters!UpcomingPeriod.Value = 365, "Upcoming Activities   " &amp; "(All Days)", "Upcoming Activities   " &amp; "(" &amp; Parameters!UpcomingPeriod.Value &amp; " Days)")</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
                                   </Style>
@@ -1496,7 +1574,7 @@ ELSE
                               <Color>LightGrey</Color>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Tan</BackgroundColor>
+                            <BackgroundColor>#366092</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1530,7 +1608,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -1547,7 +1625,7 @@ ELSE
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>Black</BackgroundColor>
+                            <BackgroundColor>MidnightBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1596,10 +1674,9 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1612,7 +1689,7 @@ ELSE
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundColor>#454545</BackgroundColor>
+                            <BackgroundColor>LightSteelBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1661,7 +1738,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1712,6 +1789,32 @@ ELSE
                           <Source>Embedded</Source>
                           <Value>ReportIcon</Value>
                           <Sizing>Clip</Sizing>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Drillthrough>
+                                  <ReportName>Project Status</ReportName>
+                                  <Parameters>
+                                    <Parameter Name="ParmProjectName">
+                                      <Value>=Fields!ProjectUID.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="ParmReportingStart">
+                                      <Value>=Parameters!ParmReportingStart.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="ParmReportingFinish">
+                                      <Value>=Parameters!ParmReportingFinish.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="UpcomingPeriod">
+                                      <Value>=Parameters!UpcomingPeriod.Value</Value>
+                                    </Parameter>
+                                    <Parameter Name="ParmBaselineNonBaseline">
+                                      <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
+                                    </Parameter>
+                                  </Parameters>
+                                </Drillthrough>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1733,9 +1836,10 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectName.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <TextDecoration>None</TextDecoration>
+                                    <TextDecoration>Underline</TextDecoration>
+                                    <Color>DarkBlue</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1753,11 +1857,6 @@ ELSE
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <BackgroundImage>
-                              <Source>External</Source>
-                              <Value>=iif(1=1,"HCA","HCA")</Value>
-                              <MIMEType>image/jpeg</MIMEType>
-                            </BackgroundImage>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1777,7 +1876,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectManager.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1810,7 +1909,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Business_Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1844,7 +1943,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!PM_Allocation.Value), "", (Fields!PM_Allocation.Value / 100))</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>0%</Format>
                                   </Style>
@@ -1879,7 +1978,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Project_Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1912,7 +2011,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!FDI.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1944,7 +2043,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectPercentCompleted.Value / 100</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -1979,7 +2078,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Start.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>MM/dd/yy</Format>
                                   </Style>
@@ -2013,7 +2112,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Finish.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>MM/dd/yy</Format>
                                   </Style>
@@ -2219,7 +2318,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Portfolio_Funding_Source.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2255,7 +2354,7 @@ ELSE
                                   <Value>=Fields!Executive_Status_Summary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>None</TextDecoration>
                                   </Style>
@@ -2289,7 +2388,6 @@ ELSE
                                   <Value>=Fields!Project_Outcomes_Expected.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2321,7 +2419,6 @@ ELSE
                                   <Value>=Fields!PM_Notes.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2367,7 +2464,7 @@ ELSE
                                                   Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") ", "")
                                                 </Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -2408,7 +2505,7 @@ ELSE
                                               <TextRun>
                                                 <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
                                                 <Style>
-                                                  <FontFamily>Segoe UI Light</FontFamily>
+                                                  <FontFamily>Tahoma</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -3399,7 +3496,7 @@ ELSE
         <Height>1.79879in</Height>
         <Style />
       </Body>
-      <Width>14.05716in</Width>
+      <Width>13.69617in</Width>
       <Page>
         <PageHeader>
           <Height>0.30208in</Height>
@@ -3418,7 +3515,6 @@ ELSE
                         Format(Parameters!ParmReportingFinish.Value, "MM/dd/yyyy")
                       </Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>g</Format>
@@ -3455,7 +3551,6 @@ ELSE
                     <TextRun>
                       <Value>Portfolio Status Report</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>12pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
@@ -3482,6 +3577,19 @@ ELSE
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
+            <Image Name="PerViewHeader2">
+              <Source>Embedded</Source>
+              <Value>PerView_logo_small_154x29</Value>
+              <Left>0.01302in</Left>
+              <Height>0.30208in</Height>
+              <Width>1.60417in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
             <Textbox Name="Textbox2">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -3491,7 +3599,6 @@ ELSE
                     <TextRun>
                       <Value>Reporting Period:</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
@@ -3504,10 +3611,10 @@ ELSE
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
               <Top>0.03in</Top>
-              <Left>9.99407in</Left>
+              <Left>9.98018in</Left>
               <Height>0.21806in</Height>
               <Width>1.79167in</Width>
-              <ZIndex>2</ZIndex>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -3533,14 +3640,16 @@ ELSE
           <ReportItems>
             <Image Name="Image2">
               <Source>Embedded</Source>
-              <Value>=SWITCH(
-Parameters!ParmLogo.Value = 0, "Poweredby",
-Parameters!ParmLogo.Value = 1, "HealthTrust",
-Parameters!ParmLogo.Value = 2, "HCA",
-Parameters!ParmLogo.Value = 3, "CaseManagement",
-Parameters!ParmLogo.Value = 4, "PerformanceImprovement",
-Parameters!ParmLogo.Value = 5, "HCAHR"
-)</Value>
+              <Value>
+                =SWITCH(
+                Parameters!ParmLogo.Value = 0, "Poweredby",
+                Parameters!ParmLogo.Value = 1, "HealthTrust",
+                Parameters!ParmLogo.Value = 2, "HCA",
+                Parameters!ParmLogo.Value = 3, "CaseManagement",
+                Parameters!ParmLogo.Value = 4, "PerformanceImprovement",
+                Parameters!ParmLogo.Value = 5, "HCAHR"
+                )
+              </Value>
               <Sizing>FitProportional</Sizing>
               <Top>0.06348in</Top>
               <Height>0.3418in</Height>
@@ -3637,7 +3746,6 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
                     <TextRun>
                       <Value>****NOTE:  Report data calculated using Non-Baseline Finish Dates****</Value>
                       <Style>
-                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Color>Red</Color>
@@ -3650,7 +3758,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox9</rd:DefaultName>
-              <Top>0.25445in</Top>
+              <Top>0.24056in</Top>
               <Left>4.14976in</Left>
               <Height>0.17708in</Height>
               <Width>5.39666in</Width>
@@ -3678,7 +3786,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
                       <Value>CONFIDENTIAL - Contains proprietary information. Not intended for external distribution.</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>
@@ -3774,27 +3882,6 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
       </DefaultValue>
       <Prompt>Reporting Finish Date:</Prompt>
       <UsedInQuery>True</UsedInQuery>
-    </ReportParameter>
-    <ReportParameter Name="ParmIncludePlanView">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>Yes</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Include PlanView Projects:</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Yes</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>No</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="UpcomingPeriod">
       <DataType>String</DataType>
@@ -4830,11 +4917,15 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="ParmIncludePlanView">
+      <DataType>String</DataType>
+      <Prompt>Parm Include Plan View</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>27</NumberOfRows>
+      <NumberOfRows>25</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -4858,252 +4949,252 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>UpcomingPeriod</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>GroupBy1</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>GroupBy2</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>GroupBy3</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>ParmBaselineNonBaseline</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>ParmActiveStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>6</RowIndex>
+          <RowIndex>5</RowIndex>
           <ParameterName>ParmProjectSponsor</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>6</RowIndex>
+          <RowIndex>5</RowIndex>
           <ParameterName>ParmProjectClient</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>7</RowIndex>
+          <RowIndex>6</RowIndex>
           <ParameterName>ParmIncludeSubsidiaries</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>7</RowIndex>
+          <RowIndex>6</RowIndex>
           <ParameterName>ParmClientSubsidiaries</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>8</RowIndex>
+          <RowIndex>7</RowIndex>
           <ParameterName>ParmPMAllocation</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>8</RowIndex>
+          <RowIndex>7</RowIndex>
           <ParameterName>ParmShellProjects</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>9</RowIndex>
+          <RowIndex>8</RowIndex>
           <ParameterName>ParmOutcomesExpected</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>9</RowIndex>
+          <RowIndex>8</RowIndex>
           <ParameterName>ParmPMNotes</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>10</RowIndex>
+          <RowIndex>9</RowIndex>
           <ParameterName>ParmDisplayUpcomingActivities</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>10</RowIndex>
+          <RowIndex>9</RowIndex>
           <ParameterName>ParmUpcomingActivities</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>11</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmKeyTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>11</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmMilestones</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>11</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmDeliverables</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>3</ColumnIndex>
-          <RowIndex>11</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmAllTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>12</RowIndex>
+          <RowIndex>11</RowIndex>
           <ParameterName>ParmProjectCategory</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>12</RowIndex>
+          <RowIndex>11</RowIndex>
           <ParameterName>ParmFunctionalArea</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>13</RowIndex>
+          <RowIndex>12</RowIndex>
           <ParameterName>ParmBusinessOwner</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>13</RowIndex>
+          <RowIndex>12</RowIndex>
           <ParameterName>ParmServiceLine</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>14</RowIndex>
+          <RowIndex>13</RowIndex>
           <ParameterName>ParmProjectManager</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>14</RowIndex>
+          <RowIndex>13</RowIndex>
           <ParameterName>ParmIncludeFundingSource</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>15</RowIndex>
+          <RowIndex>14</RowIndex>
           <ParameterName>ParmFundingSource</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>15</RowIndex>
+          <RowIndex>14</RowIndex>
           <ParameterName>ParmProjectName</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>16</RowIndex>
+          <RowIndex>15</RowIndex>
           <ParameterName>ParmSortDetails</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>16</RowIndex>
+          <RowIndex>15</RowIndex>
           <ParameterName>ParmIncludeFDI</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>17</RowIndex>
+          <RowIndex>16</RowIndex>
           <ParameterName>ParmIncludeProjectManager</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>17</RowIndex>
+          <RowIndex>16</RowIndex>
           <ParameterName>ParmIncludeProjectPriority</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>18</RowIndex>
+          <RowIndex>17</RowIndex>
           <ParameterName>ParmIncludeStartFinish</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>18</RowIndex>
+          <RowIndex>17</RowIndex>
           <ParameterName>ParmIncludeProjectStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>19</RowIndex>
+          <RowIndex>18</RowIndex>
           <ParameterName>DisplayIssuesRisks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>19</RowIndex>
+          <RowIndex>18</RowIndex>
           <ParameterName>ParmDisplayItemsDecisions</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>20</RowIndex>
+          <RowIndex>19</RowIndex>
           <ParameterName>ParmOverdueKeyTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>20</RowIndex>
+          <RowIndex>19</RowIndex>
           <ParameterName>ParmDeliverables2</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>21</RowIndex>
+          <RowIndex>20</RowIndex>
           <ParameterName>ParmAccomplishments</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>21</RowIndex>
+          <RowIndex>20</RowIndex>
           <ParameterName>ParmUpcomingKeyTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>22</RowIndex>
+          <RowIndex>21</RowIndex>
           <ParameterName>ParmTaskComments</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>22</RowIndex>
+          <RowIndex>21</RowIndex>
           <ParameterName>ParmDisplayProjectDescription</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>23</RowIndex>
+          <RowIndex>22</RowIndex>
           <ParameterName>DisplayPMNotes</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>23</RowIndex>
+          <RowIndex>22</RowIndex>
           <ParameterName>DisplaySchdCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>24</RowIndex>
+          <RowIndex>23</RowIndex>
           <ParameterName>DisplayDelivCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>24</RowIndex>
+          <RowIndex>23</RowIndex>
           <ParameterName>DisplayMilesCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>24</RowIndex>
           <ParameterName>DisplayProjectOutcomesExpected</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>24</RowIndex>
           <ParameterName>ParmLogo</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>24</RowIndex>
           <ParameterName>ParmConfidential</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>24</RowIndex>
           <ParameterName>ParmIncludePlanView</ParameterName>
         </CellDefinition>
       </CellDefinitions>
@@ -5499,29 +5590,8 @@ Cny+G9EJ1nwHcadrF1aaZqFhbDxFYTW88F9eRWaPLcq+y22STIT5oAZdxUttYDc1H9vi+sLfwzEPBulT
 jLp9xprvZQyR6bNa6fLaSPGnT9/LItzICcGSNR0ryz4hftJ/ETxx8WY9G8Pa/wCKLnT7vxVqcVvBoMumaZdy2cWg6TeQqJL+NkVBLdyuVb95+8AJIXFTfDj9snxx4s0/wTdXHidZP7StfBKamyWcEUclxd6zqtlqP8JX5xaIhZDsPl7o8Kwq+TFKPNzLX/P/AIcnmoOXLy7foj0Zv+CVngnQdCsLHwxqWqeHNmhLoGpyh2um1iKO5trqKWQSOQkiTQO4KAD/AEmbj5uNfW/+CdujD4g+NPEmh+Jta0G+8TajpmuaZHHFHPb+HdTs5buZ7iBG+9HcveTGaFvlYyylSrSZFL9pf4heJr3xl8UNP0Pxlq3h+08J/Dq18U6fJpaWrMLwS6sr7jNFIGjcW8IZf+mYwRk58m+OXx3+I/wf+HWkW2meOvEeq3ur+ALfxA1zcR6et4by41jSbY+U5gSFMRXMyJvUqvmZbOARFOWIm1Hn1ffztvp6FSVGN3y6L+u57D49/Yb8R/EubRdV1r4kLrHiTSdYuNVWTU/DcF5pUaS2f2T7NDYvJtiRV+fd5jO0jMxYggD2/wCFPhC78A/D7TNGvryw1C50+IxPPY6cunW7jcSoS3RmWMBSBgE9M96+WvGfiP4n6V4X8O6PY+IPGlvrGua5cGbSdS8Q+H4/EWr2kNqGKabcRwm0GyRlkeOXbIyo+HVQQff/ANkr4jS/Ff8AZ68O63Pqt/rl1Mk1tcXt7YRWF1JNBPJBIJYoXeISK8bKxiYxsVLJ8rAVhiI1OROTVr9Lefb5mlCVPmaimn5/I9LoooriOwKKKKACiiigAooooAKKKKACiiigAooooAKKKKAKOuaFY+KNKnsdSs7XULK6XZNbXMKyxTL6MjAgj6iovFXhLS/HXh+60nWtNsNY0q+Ty7mzvrdLi3uFyDteNwVYZA4I7Vp0UXfQDi7r9nzwFf8Aw+i8Iz+CfCM3hW3kEkeiyaPbtp8bgk7l
 gKeWDkk5C9Sabr37PHgDxVZ6Lb6p4H8Ialb+G1CaTFdaNbTJpYGMCAMhEQG1fuY+6PSu1wfWl5p+0kTyx7HG+L/gL4G+IsTJr3g3wnritdNesuoaRb3INwyLG0x3of3hREUt1KqozgCptb+Cvg7xNorabqXhPwzqGmNb29o1pc6XBLAYbdmaCMoyldkbMxRcYUsSMZrq+vejOeho9pLuw5I9jmPDvwi8J+ENGk07SfDHh/S9PmtTYyWtpp0MEL25Z3MJRVAMZaWVtuMZkc4+Y5d4h+EnhXxlp7WereGfD+p2rWf9mtBd6dDPG1ruR/s5VlI8rdGjbPu5RTjgV0xoo55d9Q5Vsedr+yd8Lo/C1zoK/DfwH/Yd9cJd3OnDw/aC0uJkBVJXi8vYzqCQGIyATiu00PQ7LwvpFrp2m2drp9hZRLBbW1tEsUNvGowqIigBVA4AAwK0KDS5pPdgopbBRRRQUFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/Z</ImageData>
     </EmbeddedImage>
-    <EmbeddedImage Name="PlanViewMedium">
-      <MIMEType>image/jpeg</MIMEType>
-      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIABoAWgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP38orzjxf4z8b2figadb/8ACudFju52TT5NQ1ie4ur1AQA3
-2YRRYbJHyrK/UfNzUWseFfH81tnVviVoWh27ypEkmkeHEtpAzsFVN93cXKMzMQowgySMDNAHplFeep8DtWnQC8+JnxAvDnJO7T7bP/fi0SmJ+zxoupSyi48R+Pr6WI+XLs8Yajb7WwGwVt5owpwynoOCPWgD0WoNUNyumXBslga88pvIWZisZkwdoYgEhc4zgE4rgF/Zp8IXU7q1z4su5ISBIs/jLVpyhxkbg10e3r2qv/woP4c/2VFf4kNlcFViuT4guzHIXYKoV/OwSzEAYPJIxQB55/wTI/bF8eftvfBjXvFnjn4cQ/DKbTPEV54et9N/tB7yaeSyfyLqRi0UYAW5WWEYzkwOc4xn6RrzJP2ZfAOnXqWMC6vYXE/mXSW9r4n1G2eT590kgVLhSfnfLN6vzyaktP2ePDN1JKLHX/HfmWkvlS+X461ebynADbGV7pgDgqcEdCPWgD0mivK9O8CWeqarJZaN8W/Fa30W4tbwanYXsse04bKTQSHgkA5FS2PhrxvpAn/s34o6RrMcFyLeY69oMNxJFIcAQ7rOW1VXJZfvIT8w45FAHp9FcB4f8Z+LNJ1p4vEv/CBf2XaHbe39pq80E1qzKDEptpImX5yV6zjAIIDdK71ZA65HIPII70AfAH/BS79la9/a/wD+CgfgHwhaaH8ONUS/+E3iqCa68a+HpNZstKWTUtEj+0W8SsmLxd2Yz5icCT5hXb/8FK/DkHwC/wCCdPgDT9U1nUtXsfAPjT4dpqOtXyvPc3FvY+I9I8+8n2hmZtkTyOQD/Ea+yqKAPL/DH7Zfw48dfs9a98U9C8Rx6x4I8N295c32oW1vL8otULzKqMquzADgAcnAGa+Lf+CdnxW+JXws/a/S++KHg34ieE4P2oIp9Vux4hNs9jpfie3WWe2sLPyJ5SkR0RFgJmWJmbRkO0tK4X9IT0oPSgD4W+NPhf4qab/wU5+Injr4V3Vzfar4N8A+GJLrwddzCDSfHdpLea19
-otfNYbYL6MRI9tPnarsUkHlTMV6L9kL9l6z/AGi/+CJ3gr4U+K7K/wBF/tzwPHpVxHPbmG90S8QHy5QjAGO4trhEkXIyskI9K+yKKAPjf/gl9oPj741+KfE/xu+MGhyaF4++wW/w1stPkAK2cGkyOup3UJwCFvdVNy4/vQ2lme1dl/wT2sJLH4n/ALUTPBJCLj4w3MqFoyvmr/YWijcMj5hwRkeh9K+lqKAPzM/4IeN4E0n4leJrET/CmL4hPqvi95rC18DPZeMYID4mun33ermQrc27RtAyxiNMI8Ay3l5Oh/wUI/Zc+L2tftW+JPDPwje40XRfi5Y2vxNutWgX5LDxH4YRBBC4xg/bp/8AhH1bkNssJyAea/SOk6n8aAPlr9gz4EL8Wv2RrvxP8TPD+3xD8dtWl8f6/pty7b7L7SIxYWbMNrf6LYQ2UGDjmFsjJNfUdvbpaW6RRrtjjUIo9AOBT6KAP//Z</ImageData>
-    </EmbeddedImage>
-    <EmbeddedImage Name="PlanViewSmall">
-      <MIMEType>image/jpeg</MIMEType>
-      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAA0ALQMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP3YvfiK0b3H2LQde1NbVikrRpDbBCOf+XiWI49wMEEHODmn
-L4l1+9QfZ/DX2dm6DUNQjix9fJE36ZryXxf+wRoniG0+O95a6gln4n+OFhPp0+qPaNKmmwtp8VnGjQiVROEaMy5LIzbygZQAa2viN+zb4k+KPjv4ceJtQ8eCw1T4dypeRwaZo4i0/UbqRkjvJXhlmlZQ9n9otogJN0IvJnLykqFAO6l1vxWFYPo/hmNdrHd/b0wIA4J/49O2a5n4KaT8Rvh78L9C0PxRqWleO/EOm2qQajr1zqKWtzqtxjc8hggso4Y854RQAFA5JyTyvhX9gzQ9H+IniHWNU1jUPEGk+K7LxHY6poF6gfTpk1m+huJyisS0WYYIoHRWEUnliQJHI0rS7Pwy/ZLh+HGj/DuF/Eeoa5qXgvUb3WNS1S/gRrvxHe3dvcRTzyldqxsz3DMAoKqqLGoCgYAO1i+Il88iqvhjVLr5ipktLyxkjUjqMtOjZHptra0DxJb+IYZGjjuYJIW2SRXELRSIfofvDqNykqSGGcggfOPhv/gmhpMP7H3hv4R6v4ik+z+GbyOaLVtBtptLuLmAwNaXMcge4nIe5s5rqCR42QKLjMSRFEx7h8H/AIPaf8I/AekaShXVNQsdPhs73V57eNbzV5ELvJcTsoG6SSaWeZu3mTyHqxyAf//Z</ImageData>
-    </EmbeddedImage>
-    <EmbeddedImage Name="PlanViewSmallIsh">
-      <MIMEType>image/jpeg</MIMEType>
-      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIABAANgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP3WufjR4Ttr2a1XxBpd1eWzmOW1tJxdXETAlSGjj3OCCCME
-dRiooPjDpt4P9H0/xVM3QA+Hb6HP4yRKPxzivNPhd4X+KV7+2X8RNb1XXLy0+GtjdrYaTpNwVePUEbS9JkWWBPKBiSK6OoAyCVjK8roUUQox5v4b/GT4m6r/AME7NJmj8O+OLr4zW+h6doF+moaMLO7TWZYYIrm+C3HlQTQwSSyTlg6wyeSyBwSMAHuP/CyL2QfufB/iqZfXbax/pJOprhPjPqnxQ8S+JPAU3gyz1zw1pmm+IUufFcM9tpd02r6UtvMWtoi1wTHI1wLcbwQVjaU8ttribrx78dtb+Cvwe1HR9BmsfHFnq9xaeM9J1i3jjt9WitLDUI5FeWNmW2S6uoLd4biIyKhmhJEsZdGq3OifHbUfg18C1s9Q1a38QeJPD1j4e8fmdrdJ9Cnkt7a4utX+6y/aYhbXtsqJlDNqELkFYsUAe9r8TJoiPtXhfxTar3Jtop9v4QyOfyBpv/C59Djm23C65YgDJku9DvbeFfrI8QT/AMerx/8AaH1L4qW3gL9olvDX/CQC+t9CgbwSbO3WSX7T9iYyfZgFJd/OxwQx3YAHasv4wWXxpv8A9n/4f3Xwj1K9bxNeJLpGpt4khliW1injL/2jNFcRpO0sE1vGiIwUmO6kJBO0gA+jPDPjXRvGsE0mjatpmrR27+XK9ldJcLG3XDFScH2NFcX+zpoXiy6+HfhzXvG19qlt4n1LT5bvU9FeWJ7bS5ruc3X2XKqN5tFcWqSZ+ZIskFmJooA//9k=</ImageData>
-    </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
-  <Variables>
-    <Variable Name="ReportIcon">
-      <Value>ReportIcon</Value>
-    </Variable>
-  </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>401f4f01-612a-4e90-a259-d2fd434df8e7</rd:ReportID>
