@@ -56,7 +56,6 @@
     <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
     <Report Include="Project Status - Packet.rdl" />
     <Report Include="Project Status.rdl" />
-    <Report Include="Project StatusOrig.rdl" />
     <Report Include="Project Status_Copy.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA) - Copy.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
