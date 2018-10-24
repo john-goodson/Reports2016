@@ -118,6 +118,10 @@
           <QueryParameter Name="@ParmProjectName">
             <Value>=Parameters!ParmProjectName.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmIncludePlanView">
+            <Value>=Parameters!ParmIncludePlanView.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
           <QueryParameter Name="@ParmReportingFinish">
             <Value>=Parameters!ParmReportingFinish.Value</Value>
           </QueryParameter>
@@ -127,15 +131,15 @@
           <QueryParameter Name="@ParmBaselineNonBaseline">
             <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmIncludePlanView">
-            <Value>=Parameters!ParmIncludePlanView.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>uspReportsPortfolioStatus(Client-HCA)_new</CommandText>
       </Query>
       <Fields>
+        <Field Name="Row_">
+          <DataField>Row#</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
         <Field Name="Start">
           <DataField>Start</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -292,6 +296,10 @@
           <DataField>sortOrder</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="TaskUID">
+          <DataField>TaskUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
         <Field Name="ProjectPercentCompleted">
           <DataField>ProjectPercentCompleted</DataField>
           <rd:TypeName>System.Int16</rd:TypeName>
@@ -299,6 +307,10 @@
         <Field Name="PM_Notes">
           <DataField>PM Notes</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TaskParentUID">
+          <DataField>TaskParentUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
         <Field Name="FDI">
           <DataField>FDI</DataField>
@@ -896,7 +908,7 @@
                   <Width>0.73344in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.38333in</Width>
+                  <Width>3.33723in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.70625in</Width>
@@ -1681,7 +1693,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.20833in</Height>
+                  <Height>0.19237in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1745,7 +1757,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.27084in</Height>
+                  <Height>0.2in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1766,6 +1778,9 @@
                               </Action>
                             </Actions>
                           </ActionInfo>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <CustomProperties>
                             <CustomProperty>
                               <Name>PlanViewSmallish</Name>
@@ -1795,7 +1810,8 @@
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <TextDecoration>None</TextDecoration>
+                                    <TextDecoration>=iif(Fields!epm_platform.Value="PerView","Underline","None")</TextDecoration>
+                                    <Color>=iif(Fields!epm_platform.Value="PerView","Blue","Black")</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1809,11 +1825,14 @@
                               </Action>
                             </Actions>
                           </ActionInfo>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingLeft>=IIF(Fields!epm_platform.Value="Planview","12pt","2pt")</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
@@ -1842,6 +1861,9 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1876,6 +1898,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Business_Owner</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1911,6 +1936,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>PM_Allocation</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1944,6 +1972,9 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1978,6 +2009,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>FDI</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2011,6 +2045,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox20</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2045,6 +2082,9 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2079,6 +2119,9 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2255,6 +2298,9 @@
                               </Style>
                             </GaugePanel>
                           </ReportItems>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2285,6 +2331,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Portfolio_Funding_Source</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2324,6 +2373,7 @@
                             <Border>
                               <Style>None</Style>
                             </Border>
+                            <VerticalAlign>Top</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2352,6 +2402,9 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2386,6 +2439,9 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value ="Yes"</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2398,192 +2454,24 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Tablix Name="Tablix9">
-                          <TablixBody>
-                            <TablixColumns>
-                              <TablixColumn>
-                                <Width>1.35823in</Width>
-                              </TablixColumn>
-                            </TablixColumns>
-                            <TablixRows>
-                              <TablixRow>
-                                <Height>0.13542in</Height>
-                                <TablixCells>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="Upcoming_KeyTasksMilestonesDeliverables">
-                                        <CanGrow>true</CanGrow>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>
-                                                  =IIf(Parameters!ParmKeyTasks.Value = "Yes" OR Parameters!ParmMilestones.Value = "Yes" OR Parameters!ParmDeliverables.Value = "Yes",
-                                                  Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") ", "")
-                                                </Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>8pt</FontSize>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>None</Style>
-                                          </Border>
-                                          <BottomBorder>
-                                            <Color>Gray</Color>
-                                            <Style>Solid</Style>
-                                          </BottomBorder>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                </TablixCells>
-                              </TablixRow>
-                              <TablixRow>
-                                <Height>0.13542in</Height>
-                                <TablixCells>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="Upcoming_AllTasks">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>8pt</FontSize>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>None</Style>
-                                          </Border>
-                                          <BottomBorder>
-                                            <Color>Gray</Color>
-                                            <Style>Solid</Style>
-                                          </BottomBorder>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                </TablixCells>
-                              </TablixRow>
-                            </TablixRows>
-                          </TablixBody>
-                          <TablixColumnHierarchy>
-                            <TablixMembers>
-                              <TablixMember />
-                            </TablixMembers>
-                          </TablixColumnHierarchy>
-                          <TablixRowHierarchy>
-                            <TablixMembers>
-                              <TablixMember>
-                                <Group Name="Details3" />
-                                <TablixMembers>
-                                  <TablixMember>
-                                    <Visibility>
-                                      <Hidden>
-                                        =SWITCH
-                                        (
-                                        Fields!UpcomingTaskFlag.Value = 0,true,
-                                        Parameters!ParmKeyTasks.Value = "No" AND Parameters!ParmMilestones.Value = "No" AND Parameters!ParmDeliverables.Value = "No",true,
-                                        Parameters!ParmKeyTasks.Value = "No" AND Fields!UpcomingTaskFlag.Value = 3,true,
-                                        Parameters!ParmMilestones.Value = "No" AND Fields!UpcomingTaskFlag.Value = 2,true,
-                                        Parameters!ParmDeliverables.Value = "No" AND Fields!UpcomingTaskFlag.Value = 1,true
-
-                                        )
-                                      </Hidden>
-                                    </Visibility>
-                                  </TablixMember>
-                                  <TablixMember>
-                                    <Visibility>
-                                      <Hidden>
-                                        =SWITCH
-                                        (
-                                        Parameters!ParmAllTasks.Value = "No",true,
-                                        Fields!UpcomingTaskFlag.Value &lt;&gt; 0,true,
-                                        Parameters!ParmKeyTasks.Value = "Yes" AND Fields!UpcomingTaskFlag.Value = 3,true,
-                                        Parameters!ParmMilestones.Value = "Yes" AND Fields!UpcomingTaskFlag.Value = 2,true,
-                                        Parameters!ParmDeliverables.Value = "Yes" AND Fields!UpcomingTaskFlag.Value = 1,true
-
-                                        )
-                                      </Hidden>
-                                    </Visibility>
-                                  </TablixMember>
-                                </TablixMembers>
-                              </TablixMember>
-                            </TablixMembers>
-                          </TablixRowHierarchy>
-                          <DataSetName>uspReportsPortfolioStatus_Client_HCA</DataSetName>
-                          <Filters>
-                            <Filter>
-                              <FilterExpression>=Fields!UpcomingTaskFlag.Value</FilterExpression>
-                              <Operator>Between</Operator>
-                              <FilterValues>
-                                <FilterValue DataType="Integer">0</FilterValue>
-                                <FilterValue DataType="Integer">3</FilterValue>
-                              </FilterValues>
-                            </Filter>
-                          </Filters>
-                          <SortExpressions>
-                            <SortExpression>
-                              <Value>=Fields!TaskBaselineFinish.Value</Value>
-                            </SortExpression>
-                            <SortExpression>
-                              <Value>=Fields!TaskName.Value</Value>
-                            </SortExpression>
-                          </SortExpressions>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                          </Style>
-                        </Tablix>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.125in</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox77">
+                        <Textbox Name="TaskName">
+                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI Light</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox17</rd:DefaultName>
+                          <rd:DefaultName>TaskName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -2592,522 +2480,6 @@
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox78">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox18</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox79">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox19</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox24">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox24</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox83">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox84">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox22</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox7">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox7</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox21">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox85">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox23</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox86">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox25</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox87">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox26</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox6">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox6</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox12">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox12</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox30">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox30</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox89">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox28</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox91">
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox32</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Width>1pt</Width>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -3184,20 +2556,91 @@
               <TablixMembers>
                 <TablixMember>
                   <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember />
-                <TablixMember>
-                  <Visibility>
-                    <Hidden>=IsNothing(Parameters!GroupBy2.Value)</Hidden>
-                  </Visibility>
+                  <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
                 </TablixMember>
                 <TablixMember>
-                  <Visibility>
-                    <Hidden>=IsNothing(Parameters!GroupBy3.Value)</Hidden>
-                  </Visibility>
+                  <Group Name="GroupBy1">
+                    <GroupExpressions>
+                      <GroupExpression>
+                        =SWITCH(
+                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                        )
+                      </GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <TablixMembers>
+                    <TablixMember>
+                      <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                    </TablixMember>
+                    <TablixMember>
+                      <Group Name="GroupBy2">
+                        <GroupExpressions>
+                          <GroupExpression>
+                            =SWITCH(
+                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
+                            Parameters!GroupBy2.Value = "Project Category", Fields!ProjectCategory.Value,
+                            Parameters!GroupBy2.Value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
+                            )
+                          </GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Visibility>
+                            <Hidden>=IsNothing(Parameters!GroupBy2.Value)</Hidden>
+                          </Visibility>
+                          <KeepWithGroup>After</KeepWithGroup>
+                          <RepeatOnNewPage>true</RepeatOnNewPage>
+                        </TablixMember>
+                        <TablixMember>
+                          <Group Name="GroupBy3">
+                            <GroupExpressions>
+                              <GroupExpression>
+                                =SWITCH(
+                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
+                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
+                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
+                                )
+                              </GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <TablixMembers>
+                            <TablixMember>
+                              <Visibility>
+                                <Hidden>=IsNothing(Parameters!GroupBy3.Value)</Hidden>
+                              </Visibility>
+                              <KeepWithGroup>After</KeepWithGroup>
+                              <RepeatOnNewPage>true</RepeatOnNewPage>
+                            </TablixMember>
+                            <TablixMember>
+                              <Group Name="ProjectName">
+                                <GroupExpressions>
+                                  <GroupExpression>=Fields!Row_.Value</GroupExpression>
+                                </GroupExpressions>
+                              </Group>
+                              <TablixMembers>
+                                <TablixMember />
+                              </TablixMembers>
+                              <Visibility>
+                                <Hidden>= Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value and Parameters!ParmDisplayUpcomingActivities.Value="No"</Hidden>
+                              </Visibility>
+                            </TablixMember>
+                          </TablixMembers>
+                        </TablixMember>
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
                 </TablixMember>
-                <TablixMember />
-                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
             <RepeatRowHeaders>true</RepeatRowHeaders>
@@ -3205,8 +2648,8 @@
             <DataSetName>uspReportsPortfolioStatus_Client_HCA</DataSetName>
             <Top>0.03125in</Top>
             <Left>0.00651in</Left>
-            <Height>1.45504in</Height>
-            <Width>15.16581in</Width>
+            <Height>1.24324in</Height>
+            <Width>16.11971in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3699,7 +3142,7 @@
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>15 Days</Value>
+          <Value>30</Value>
         </Values>
       </DefaultValue>
       <Prompt>Upcoming Period:</Prompt>
@@ -3716,7 +3159,7 @@
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>Project Client</Value>
+          <Value>Client</Value>
         </Values>
       </DefaultValue>
       <Prompt>1st Group By:</Prompt>
@@ -3744,6 +3187,24 @@
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ParmActiveStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>In Progress</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Project Status:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>prm9_ProjectActiveStatus</DataSetName>
+          <ValueField>ProjectActiveStatus</ValueField>
+          <LabelField>ProjectActiveStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="GroupBy2">
       <DataType>String</DataType>
@@ -3819,6 +3280,23 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="ParmProjectClient">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Parallon.HCA</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Project Client:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>prm1_ProjectClient</DataSetName>
+          <ValueField>ProjectClient</ValueField>
+          <LabelField>ProjectClient</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
     <ReportParameter Name="ParmBaselineNonBaseline">
       <DataType>String</DataType>
       <DefaultValue>
@@ -3840,24 +3318,6 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmActiveStatus">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>In Progress</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Project Status:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>prm9_ProjectActiveStatus</DataSetName>
-          <ValueField>ProjectActiveStatus</ValueField>
-          <LabelField>ProjectActiveStatus</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-      <UsedInQuery>True</UsedInQuery>
-    </ReportParameter>
     <ReportParameter Name="ParmProjectSponsor">
       <DataType>String</DataType>
       <DefaultValue>
@@ -3874,23 +3334,6 @@
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
-      <UsedInQuery>True</UsedInQuery>
-    </ReportParameter>
-    <ReportParameter Name="ParmProjectClient">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>Parallon.HCA</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Project Client:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>prm1_ProjectClient</DataSetName>
-          <ValueField>ProjectClient</ValueField>
-          <LabelField>ProjectClient</LabelField>
-        </DataSetReference>
-      </ValidValues>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmIncludeSubsidiaries">
@@ -3931,6 +3374,27 @@
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ParmOutcomesExpected">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Yes</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Include Project Outcomes Expected</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Yes</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>No</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="ParmPMAllocation">
       <DataType>Boolean</DataType>
@@ -3978,27 +3442,6 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmOutcomesExpected">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>Yes</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Include Project Outcomes Expected</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Yes</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>No</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
     <ReportParameter Name="ParmPMNotes">
       <DataType>String</DataType>
       <DefaultValue>
@@ -4024,7 +3467,7 @@
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>Yes</Value>
+          <Value>No</Value>
         </Values>
       </DefaultValue>
       <Prompt>Include Upcoming Activities</Prompt>
@@ -4045,7 +3488,7 @@
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>2</Value>
+          <Value>=IIF(Parameters!ParmDisplayUpcomingActivities.Value = "YES","",10)</Value>
         </Values>
       </DefaultValue>
       <Prompt>Upcoming Activities to Include:</Prompt>
@@ -4058,6 +3501,64 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
       <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
+    <ReportParameter Name="ParmProjectCategory">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>prm2_ProjectCategory</DataSetName>
+          <ValueField>ProjectCategory</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Project Category:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>prm2_ProjectCategory</DataSetName>
+          <ValueField>ProjectCategory</ValueField>
+          <LabelField>ProjectCategory</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ParmFunctionalArea">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>prm8_FunctionalArea</DataSetName>
+          <ValueField>FunctionalArea</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Functional Area:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>prm8_FunctionalArea</DataSetName>
+          <ValueField>FunctionalArea</ValueField>
+          <LabelField>FunctionalArea</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
+    </ReportParameter>
+    <ReportParameter Name="ParmIncludeFundingSource">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>No</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Include Funding Source</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Yes</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>No</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="ParmKeyTasks">
       <DataType>String</DataType>
@@ -4116,56 +3617,20 @@
       </ValidValues>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
-    <ReportParameter Name="ParmAllTasks">
+    <ReportParameter Name="ParmProjectManager">
       <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>prmAllTasks</DataSetName>
-          <ValueField>TaskValue</ValueField>
+          <DataSetName>prm4_ProjectManager</DataSetName>
+          <ValueField>ProjectOwnerResourceUID</ValueField>
         </DataSetReference>
       </DefaultValue>
-      <Prompt>Show All Tasks</Prompt>
-      <Hidden>true</Hidden>
+      <Prompt>Project Manager:</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>prmAllTasks</DataSetName>
-          <ValueField>TaskValue</ValueField>
-          <LabelField>TaskValue</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ParmProjectCategory">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>prm2_ProjectCategory</DataSetName>
-          <ValueField>ProjectCategory</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Project Category:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>prm2_ProjectCategory</DataSetName>
-          <ValueField>ProjectCategory</ValueField>
-          <LabelField>ProjectCategory</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="ParmFunctionalArea">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>prm8_FunctionalArea</DataSetName>
-          <ValueField>FunctionalArea</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Functional Area:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>prm8_FunctionalArea</DataSetName>
-          <ValueField>FunctionalArea</ValueField>
-          <LabelField>FunctionalArea</LabelField>
+          <DataSetName>prm4_ProjectManager</DataSetName>
+          <ValueField>ProjectOwnerResourceUID</ValueField>
+          <LabelField>ProjectOwnerName</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -4190,62 +3655,22 @@
       <MultiValue>true</MultiValue>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
-    <ReportParameter Name="ParmServiceLine">
+    <ReportParameter Name="ParmAllTasks">
       <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>prm_ServiceLine</DataSetName>
-          <ValueField>Service_Line</ValueField>
+          <DataSetName>prmAllTasks</DataSetName>
+          <ValueField>TaskValue</ValueField>
         </DataSetReference>
       </DefaultValue>
-      <Prompt>Service Line</Prompt>
+      <Prompt>Show All Tasks</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>prm_ServiceLine</DataSetName>
-          <ValueField>Service_Line</ValueField>
-          <LabelField>Service_Line</LabelField>
+          <DataSetName>prmAllTasks</DataSetName>
+          <ValueField>TaskValue</ValueField>
+          <LabelField>TaskValue</LabelField>
         </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="ParmProjectManager">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>prm4_ProjectManager</DataSetName>
-          <ValueField>ProjectOwnerResourceUID</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Project Manager:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>prm4_ProjectManager</DataSetName>
-          <ValueField>ProjectOwnerResourceUID</ValueField>
-          <LabelField>ProjectOwnerName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-      <UsedInQuery>True</UsedInQuery>
-    </ReportParameter>
-    <ReportParameter Name="ParmIncludeFundingSource">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>No</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Include Funding Source</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Yes</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>No</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
       </ValidValues>
     </ReportParameter>
     <ReportParameter Name="ParmFundingSource">
@@ -4266,45 +3691,23 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="ParmProjectName">
+    <ReportParameter Name="ParmServiceLine">
       <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>prm10_Projects</DataSetName>
-          <ValueField>ProjectUID</ValueField>
+          <DataSetName>prm_ServiceLine</DataSetName>
+          <ValueField>Service_Line</ValueField>
         </DataSetReference>
       </DefaultValue>
-      <Prompt>Projects:</Prompt>
+      <Prompt>Service Line</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>prm10_Projects</DataSetName>
-          <ValueField>ProjectUID</ValueField>
-          <LabelField>ProjectName</LabelField>
+          <DataSetName>prm_ServiceLine</DataSetName>
+          <ValueField>Service_Line</ValueField>
+          <LabelField>Service_Line</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
-      <UsedInQuery>True</UsedInQuery>
-    </ReportParameter>
-    <ReportParameter Name="ParmSortDetails">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>Project Name/Project Priority</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Sort Details By:</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Project Name/Project Priority</Value>
-            <Label>Project Name/Project Priority</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Project Priority/Project Name</Value>
-            <Label>Project Priority/Project Name</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="ParmIncludeFDI">
       <DataType>String</DataType>
@@ -4327,26 +3730,45 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmIncludeProjectManager">
+    <ReportParameter Name="ParmSortDetails">
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>Yes</Value>
+          <Value>Project Name/Project Priority</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Include Project Manager</Prompt>
+      <Prompt>Sort Details By:</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
-            <Value>Yes</Value>
-            <Label>Yes</Label>
+            <Value>Project Name/Project Priority</Value>
+            <Label>Project Name/Project Priority</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>No</Value>
-            <Label>No</Label>
+            <Value>Project Priority/Project Name</Value>
+            <Label>Project Priority/Project Name</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ParmProjectName">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>prm10_Projects</DataSetName>
+          <ValueField>ProjectUID</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Projects:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>prm10_Projects</DataSetName>
+          <ValueField>ProjectUID</ValueField>
+          <LabelField>ProjectName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmIncludeProjectPriority">
       <DataType>String</DataType>
@@ -4390,23 +3812,23 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmIncludeProjectStatus">
-      <DataType>Boolean</DataType>
+    <ReportParameter Name="ParmIncludeProjectManager">
+      <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>true</Value>
+          <Value>Yes</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Include Project Status Reports (Y/N):</Prompt>
+      <Prompt>Include Project Manager</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
-            <Value>true</Value>
-            <Label>No</Label>
+            <Value>Yes</Value>
+            <Label>Yes</Label>
           </ParameterValue>
           <ParameterValue>
-            <Value>false</Value>
-            <Label>Yes</Label>
+            <Value>No</Value>
+            <Label>No</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
@@ -4419,27 +3841,6 @@
         </Values>
       </DefaultValue>
       <Prompt>Display Issues Risks (Y/N):</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>false</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>true</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ParmDisplayItemsDecisions">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>false</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Display Action Items and Decisions (Y/N):</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -4474,23 +3875,23 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmDeliverables2">
+    <ReportParameter Name="ParmIncludeProjectStatus">
       <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>false</Value>
+          <Value>true</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Display Overdue Deliverables (Y/N):</Prompt>
+      <Prompt>Include Project Status Reports (Y/N):</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
-            <Value>false</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
             <Value>true</Value>
             <Label>No</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>false</Value>
+            <Label>Yes</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
@@ -4516,14 +3917,14 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmUpcomingKeyTasks">
+    <ReportParameter Name="ParmDisplayItemsDecisions">
       <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>true</Value>
+          <Value>false</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Display Upcoming Key Tasks/Milestones (Y/N):</Prompt>
+      <Prompt>Display Action Items and Decisions (Y/N):</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -4558,14 +3959,14 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="ParmDisplayProjectDescription">
+    <ReportParameter Name="ParmDeliverables2">
       <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
           <Value>false</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Display Project Description (Y/N):</Prompt>
+      <Prompt>Display Overdue Deliverables (Y/N):</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -4587,6 +3988,48 @@
         </Values>
       </DefaultValue>
       <Prompt>Display Project Manager Notes (Y/N):</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>false</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>true</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ParmUpcomingKeyTasks">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Display Upcoming Key Tasks/Milestones (Y/N):</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>false</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>true</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ParmDisplayProjectDescription">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Display Project Description (Y/N):</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -4755,7 +4198,7 @@
           <ParameterName>UserID</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
+          <ColumnIndex>2</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>ParmProjectsAllowed</ParameterName>
         </CellDefinition>
@@ -4765,17 +4208,17 @@
           <ParameterName>ParmReportingStart</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>ParmReportingFinish</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>UpcomingPeriod</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>0</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>GroupBy1</ParameterName>
         </CellDefinition>
@@ -4785,7 +4228,7 @@
           <ParameterName>GroupBy2</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>4</RowIndex>
           <ParameterName>GroupBy3</ParameterName>
         </CellDefinition>
@@ -4795,8 +4238,8 @@
           <ParameterName>ParmBaselineNonBaseline</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>ParmActiveStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4806,16 +4249,16 @@
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>6</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>ParmProjectClient</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>7</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>6</RowIndex>
           <ParameterName>ParmIncludeSubsidiaries</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>0</ColumnIndex>
           <RowIndex>7</RowIndex>
           <ParameterName>ParmClientSubsidiaries</ParameterName>
         </CellDefinition>
@@ -4825,28 +4268,28 @@
           <ParameterName>ParmPMAllocation</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>8</RowIndex>
           <ParameterName>ParmShellProjects</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>9</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>7</RowIndex>
           <ParameterName>ParmOutcomesExpected</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>9</RowIndex>
+          <RowIndex>8</RowIndex>
           <ParameterName>ParmPMNotes</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>10</RowIndex>
+          <RowIndex>9</RowIndex>
           <ParameterName>ParmDisplayUpcomingActivities</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>10</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>9</RowIndex>
           <ParameterName>ParmUpcomingActivities</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4865,153 +4308,153 @@
           <ParameterName>ParmDeliverables</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>3</ColumnIndex>
-          <RowIndex>11</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>12</RowIndex>
           <ParameterName>ParmAllTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>12</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmProjectCategory</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>12</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmFunctionalArea</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>13</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>12</RowIndex>
           <ParameterName>ParmBusinessOwner</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>13</RowIndex>
           <ParameterName>ParmServiceLine</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>14</RowIndex>
+          <RowIndex>12</RowIndex>
           <ParameterName>ParmProjectManager</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>14</RowIndex>
+          <RowIndex>10</RowIndex>
           <ParameterName>ParmIncludeFundingSource</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>15</RowIndex>
+          <RowIndex>13</RowIndex>
           <ParameterName>ParmFundingSource</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>15</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>14</RowIndex>
           <ParameterName>ParmProjectName</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>16</RowIndex>
+          <RowIndex>14</RowIndex>
           <ParameterName>ParmSortDetails</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>16</RowIndex>
+          <RowIndex>13</RowIndex>
           <ParameterName>ParmIncludeFDI</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>17</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>15</RowIndex>
           <ParameterName>ParmIncludeProjectManager</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>17</RowIndex>
+          <RowIndex>14</RowIndex>
           <ParameterName>ParmIncludeProjectPriority</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>18</RowIndex>
+          <RowIndex>15</RowIndex>
           <ParameterName>ParmIncludeStartFinish</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>18</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>16</RowIndex>
           <ParameterName>ParmIncludeProjectStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>19</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>15</RowIndex>
           <ParameterName>DisplayIssuesRisks</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>19</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>17</RowIndex>
           <ParameterName>ParmDisplayItemsDecisions</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>20</RowIndex>
+          <RowIndex>16</RowIndex>
           <ParameterName>ParmOverdueKeyTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>20</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>19</RowIndex>
           <ParameterName>ParmDeliverables2</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>21</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>16</RowIndex>
           <ParameterName>ParmAccomplishments</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>21</RowIndex>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>20</RowIndex>
           <ParameterName>ParmUpcomingKeyTasks</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>22</RowIndex>
+          <RowIndex>19</RowIndex>
           <ParameterName>ParmTaskComments</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>22</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>20</RowIndex>
           <ParameterName>ParmDisplayProjectDescription</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>23</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>19</RowIndex>
           <ParameterName>DisplayPMNotes</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>23</RowIndex>
+          <RowIndex>20</RowIndex>
           <ParameterName>DisplaySchdCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>24</RowIndex>
+          <RowIndex>21</RowIndex>
           <ParameterName>DisplayDelivCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>24</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>21</RowIndex>
           <ParameterName>DisplayMilesCom</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>22</RowIndex>
           <ParameterName>DisplayProjectOutcomesExpected</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>22</RowIndex>
           <ParameterName>ParmLogo</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>25</RowIndex>
+          <RowIndex>22</RowIndex>
           <ParameterName>ParmConfidential</ParameterName>
         </CellDefinition>
         <CellDefinition>

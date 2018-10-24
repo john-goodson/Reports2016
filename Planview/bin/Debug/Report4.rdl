@@ -84,7 +84,9 @@ declare @ParmIncludePlanView VARCHAR(100) =N'Yes'
 				  , t.TaskActualFinishDate
 				  , a.[Task Comments_T] AS AssignmentTaskComments
 				  , t.[Task Comments] AS TaskComments
-				  , 1 as sortOrder
+				  , 1 as sortOrder 
+				  , t.TaskUID as TaskUID
+				  , t.TaskParentUID  as TaskParentUID
 		
 				  -- 08/11/2014 - Added Baseline and Non-Baseline option to report
 				  , CASE @ParmBaselineNonBaseline
@@ -224,6 +226,8 @@ declare @ParmIncludePlanView VARCHAR(100) =N'Yes'
 				  , a.[Task Comments_T] AS AssignmentTaskComments
 				  , t.[Task Comments] AS TaskComments
 				  , 2 as sortorder
+				  		    , ( select top 1  per.TaskUID  from #temp_perviewProjects per where per.ProjectUID = pids.perviewUID      )			AS  TaskUID
+				    , ( select top 1  per.TaskParentUID  from #temp_perviewProjects per where per.ProjectUID = pids.perviewUID      )			AS  TaskParentUID
 		
 				  -- 08/11/2014 - Added Baseline and Non-Baseline option to report
 				  , CASE @ParmBaselineNonBaseline
@@ -296,11 +300,19 @@ SELECT	cprojs.* into #CombinedProjects
 			union all select * from #temp_planviewProjects
 				  ) cprojs
 
-	select * from  #CombinedProjects cp
-	order by cp.ProjectUID, cp.sortOrder, cp.ProjectName  asc</CommandText>
+	select  ROW_NUMBER() OVER(ORDER BY puid ASC) AS Row#
+	--, cp.TaskUID, cp.TaskParentUID  -- added this
+	, * from  #CombinedProjects cp 
+
+	--where cp.ProjectUID = '81849773-BECB-E811-811E-0050568F18E4'
+	order by cp.ProjectUID, cp.sortOrder, cp.ProjectName  asc  , Row# desc</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
+        <Field Name="Row_">
+          <DataField>Row#</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
         <Field Name="Start">
           <DataField>Start</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -453,6 +465,14 @@ SELECT	cprojs.* into #CombinedProjects
           <DataField>sortOrder</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="TaskUID">
+          <DataField>TaskUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="TaskParentUID">
+          <DataField>TaskParentUID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
         <Field Name="UpcomingTaskFlag">
           <DataField>UpcomingTaskFlag</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -528,8 +548,167 @@ SELECT	cprojs.* into #CombinedProjects
                 <TablixColumn>
                   <Width>3.13542in</Width>
                 </TablixColumn>
+                <TablixColumn>
+                  <Width>3.52083in</Width>
+                </TablixColumn>
               </TablixColumns>
               <TablixRows>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Project Name</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Business Owner</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox3</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>epm platform</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox88">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox88</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
                 <TablixRow>
                   <Height>0.25in</Height>
                   <TablixCells>
@@ -579,21 +758,16 @@ SELECT	cprojs.* into #CombinedProjects
                     </TablixCell>
                     <TablixCell />
                     <TablixCell />
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.22in</Height>
-                  <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox2">
+                        <Textbox Name="Textbox89">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Project Name</Value>
+                                  <Value />
                                   <Style>
                                     <FontFamily />
                                     <FontSize>11pt</FontSize>
@@ -605,7 +779,7 @@ SELECT	cprojs.* into #CombinedProjects
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <rd:DefaultName>Textbox89</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -613,83 +787,6 @@ SELECT	cprojs.* into #CombinedProjects
                             <BottomBorder>
                               <Style>Solid</Style>
                             </BottomBorder>
-                            <FontFamily />
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox3">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Business Owner</Value>
-                                  <Style>
-                                    <FontFamily />
-                                    <FontSize>11pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>#666666</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox3</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                            </Border>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <FontFamily />
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox4">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>epm platform</Value>
-                                  <Style>
-                                    <FontFamily />
-                                    <FontSize>11pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>#666666</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox4</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                            </Border>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -702,6 +799,93 @@ SELECT	cprojs.* into #CombinedProjects
                 </TablixRow>
                 <TablixRow>
                   <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="GroupBy2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=SWITCH(
+                        Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy2.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy2.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                        Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
+                        )</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>3</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox90">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox90</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.46875in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -724,6 +908,9 @@ SELECT	cprojs.* into #CombinedProjects
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ProjectName1</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -759,6 +946,9 @@ SELECT	cprojs.* into #CombinedProjects
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Business_Owner</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -794,6 +984,9 @@ SELECT	cprojs.* into #CombinedProjects
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>epm_platform</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -809,6 +1002,116 @@ SELECT	cprojs.* into #CombinedProjects
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Tablix Name="Tablix3">
+                          <TablixBody>
+                            <TablixColumns>
+                              <TablixColumn>
+                                <Width>3.52083in</Width>
+                              </TablixColumn>
+                            </TablixColumns>
+                            <TablixRows>
+                              <TablixRow>
+                                <Height>0.23438in</Height>
+                                <TablixCells>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="TaskName">
+                                        <CanGrow>true</CanGrow>
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=Fields!TaskName.Value</Value>
+                                                <Style />
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style />
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>TaskName</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Color>LightGrey</Color>
+                                            <Style>Solid</Style>
+                                          </Border>
+                                          <PaddingLeft>2pt</PaddingLeft>
+                                          <PaddingRight>2pt</PaddingRight>
+                                          <PaddingTop>2pt</PaddingTop>
+                                          <PaddingBottom>2pt</PaddingBottom>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                </TablixCells>
+                              </TablixRow>
+                              <TablixRow>
+                                <Height>0.23438in</Height>
+                                <TablixCells>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="epm_platform1">
+                                        <CanGrow>true</CanGrow>
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
+                                                <Style />
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style />
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>epm_platform1</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Color>LightGrey</Color>
+                                            <Style>Solid</Style>
+                                          </Border>
+                                          <PaddingLeft>2pt</PaddingLeft>
+                                          <PaddingRight>2pt</PaddingRight>
+                                          <PaddingTop>2pt</PaddingTop>
+                                          <PaddingBottom>2pt</PaddingBottom>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                </TablixCells>
+                              </TablixRow>
+                            </TablixRows>
+                          </TablixBody>
+                          <TablixColumnHierarchy>
+                            <TablixMembers>
+                              <TablixMember />
+                            </TablixMembers>
+                          </TablixColumnHierarchy>
+                          <TablixRowHierarchy>
+                            <TablixMembers>
+                              <TablixMember>
+                                <Group Name="Details" />
+                                <TablixMembers>
+                                  <TablixMember />
+                                  <TablixMember />
+                                </TablixMembers>
+                                <Visibility>
+                                  <Hidden>=IIF(Parameters!UpcomingActivities.Value="none",true,false)</Hidden>
+                                </Visibility>
+                              </TablixMember>
+                            </TablixMembers>
+                          </TablixRowHierarchy>
+                          <DataSetName>DataSet1</DataSetName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </Tablix>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
@@ -818,57 +1121,81 @@ SELECT	cprojs.* into #CombinedProjects
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember>
-                  <KeepTogether>true</KeepTogether>
-                </TablixMember>
-                <TablixMember>
-                  <Group Name="Group1">
+                  <Group Name="GroupBy1">
                     <GroupExpressions>
                       <GroupExpression>=SWITCH(
-                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
-                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
-                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-
-                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                        )</GroupExpression>
+                                    Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                                    Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                                    Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+                                  
+                                    Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                                    )</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=SWITCH(
-                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
-                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
-                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-
-                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                        )</Value>
+                      <Value>=Fields!Client.Value</Value>
                     </SortExpression>
                   </SortExpressions>
                   <TablixMembers>
                     <TablixMember>
-                      <Group Name="projectName" />
+                      <Group Name="GroupBy2">
+                        <GroupExpressions>
+                          <GroupExpression>=SWITCH(
+                                    Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                                  
+                                    Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+               
+                                    Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                                    )</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!Project_Client.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="projectName">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!Row_.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <Visibility>
+                            <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value</Hidden>
+                          </Visibility>
+                        </TablixMember>
+                      </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
+                  <Visibility>
+                    <Hidden>=Fields!epm_platform.Value = "PerView" and Fields!TaskUID.Value&lt;&gt;Fields!TaskParentUID.Value</Hidden>
+                  </Visibility>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet1</DataSetName>
             <Top>0.43in</Top>
-            <Height>0.72in</Height>
-            <Width>8.13542in</Width>
+            <Height>1.21875in</Height>
+            <Width>11.65625in</Width>
             <ZIndex>1</ZIndex>
             <Style />
           </Tablix>
         </ReportItems>
-        <Height>1.4in</Height>
+        <Height>2.61875in</Height>
         <Style />
       </Body>
-      <Width>10.13542in</Width>
+      <Width>12.39583in</Width>
       <Page>
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>
@@ -883,14 +1210,14 @@ SELECT	cprojs.* into #CombinedProjects
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>Project Client</Value>
+          <Value>Client</Value>
         </Values>
       </DefaultValue>
       <Prompt>First Grouping</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
-            <Value>Project Client</Value>
+            <Value>Client</Value>
             <Label>Project Client</Label>
           </ParameterValue>
           <ParameterValue>
@@ -921,6 +1248,34 @@ SELECT	cprojs.* into #CombinedProjects
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="UpcomingActivities">
+      <DataType>String</DataType>
+      <Prompt>Show Upcoming Activities</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>keyTasks</Value>
+            <Label>Key Tasks</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>milestones</Value>
+            <Label>Milestones</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>deliverables</Value>
+            <Label>Deliverables</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>allTaks</Value>
+            <Label>All Tasks</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>none</Value>
+            <Label>None</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -936,6 +1291,11 @@ SELECT	cprojs.* into #CombinedProjects
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>GroupBy2</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>UpcomingActivities</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
