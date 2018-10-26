@@ -1737,6 +1737,7 @@
                           </Style>
                         </Textbox>
                         <ColSpan>16</ColSpan>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -1795,6 +1796,7 @@
                             <PaddingTop>3pt</PaddingTop>
                           </Style>
                         </Image>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2573,6 +2575,17 @@
                       </GroupExpression>
                     </GroupExpressions>
                   </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=SWITCH(
+                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
+                        )</Value>
+                    </SortExpression>
+                  </SortExpressions>
                   <TablixMembers>
                     <TablixMember>
                       <KeepWithGroup>After</KeepWithGroup>
@@ -2592,6 +2605,17 @@
                           </GroupExpression>
                         </GroupExpressions>
                       </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=SWITCH(
+                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
+                            Parameters!GroupBy2.Value = "Project Category", Fields!ProjectCategory.Value,
+                            Parameters!GroupBy2.Value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
+                            )</Value>
+                        </SortExpression>
+                      </SortExpressions>
                       <TablixMembers>
                         <TablixMember>
                           <Visibility>
@@ -2603,17 +2627,26 @@
                         <TablixMember>
                           <Group Name="GroupBy3">
                             <GroupExpressions>
-                              <GroupExpression>
-                                =SWITCH(
+                              <GroupExpression>=SWITCH(
                                 Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
                                 Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
                                 Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
 
                                 Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
-                                )
-                              </GroupExpression>
+                                )</GroupExpression>
                             </GroupExpressions>
                           </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=SWITCH(
+                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
+                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
+                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+
+                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
+                                )</Value>
+                            </SortExpression>
+                          </SortExpressions>
                           <TablixMembers>
                             <TablixMember>
                               <Visibility>
