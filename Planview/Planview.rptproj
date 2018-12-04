@@ -8,11 +8,11 @@
     <OverwriteDataSources>False</OverwriteDataSources>
     <TargetServerVersion>SSRS2016</TargetServerVersion>
     <Platform>Win32</Platform>
-    <TargetReportFolder>Project Status Reports</TargetReportFolder>
+    <TargetReportFolder>Staging</TargetReportFolder>
     <TargetDatasetFolder>Datasets</TargetDatasetFolder>
     <TargetDatasourceFolder>Data Sources</TargetDatasourceFolder>
     <TargetReportPartFolder>Report Parts</TargetReportPartFolder>
-    <TargetServerURL>http://xrdcwpdbsmsp03:8088/Reportserver</TargetServerURL>
+    <TargetServerURL>http://xrdcwpdbsmsp03:8090/Reportserver</TargetServerURL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'DebugLocal' ">
     <FullPath>DebugLocal</FullPath>
@@ -49,14 +49,18 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
+    <DataSource Include="PerViewDataMart New.rds" />
     <DataSource Include="PerViewDataMartNew.rds" />
   </ItemGroup>
   <ItemGroup>
     <Report Include="Portfolio Project Status for Packet.rdl" />
     <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
+    <Report Include="Program Status Orig.rdl" />
+    <Report Include="Program Status Upgraded.rdl" />
     <Report Include="Project Status - Packet.rdl" />
     <Report Include="Project Status.rdl" />
     <Report Include="Project Status_Copy.rdl" />
+    <Report Include="returnToPerview.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA) - Copy.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
   </ItemGroup>

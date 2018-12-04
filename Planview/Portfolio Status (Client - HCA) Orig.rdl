@@ -913,7 +913,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Name</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -955,7 +955,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Manager</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -994,7 +994,7 @@ ELSE
                                 <TextRun>
                                   <Value>Business</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1010,7 +1010,7 @@ ELSE
                                 <TextRun>
                                   <Value>Owner</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1049,7 +1049,7 @@ ELSE
                                 <TextRun>
                                   <Value>PM Allocation</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1088,7 +1088,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Priority</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1127,7 +1127,7 @@ ELSE
                                 <TextRun>
                                   <Value>FDI</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1166,7 +1166,7 @@ ELSE
                                 <TextRun>
                                   <Value>%</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1182,7 +1182,7 @@ ELSE
                                 <TextRun>
                                   <Value>Comp</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1221,7 +1221,7 @@ ELSE
                                 <TextRun>
                                   <Value>Start</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1260,7 +1260,7 @@ ELSE
                                 <TextRun>
                                   <Value>Finish</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1299,7 +1299,7 @@ ELSE
                                 <TextRun>
                                   <Value>PM Status</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1338,7 +1338,7 @@ ELSE
                                 <TextRun>
                                   <Value>Funding</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1354,7 +1354,7 @@ ELSE
                                 <TextRun>
                                   <Value>Source</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1393,7 +1393,7 @@ ELSE
                                 <TextRun>
                                   <Value>Executive Status Summary</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1432,7 +1432,7 @@ ELSE
                                 <TextRun>
                                   <Value>Project Outcomes Expected</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1471,7 +1471,7 @@ ELSE
                                 <TextRun>
                                   <Value>PM Notes</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1510,7 +1510,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(Parameters!UpcomingPeriod.Value = 365, "Upcoming Activities   " &amp; "(All Days)", "Upcoming Activities   " &amp; "(" &amp; Parameters!UpcomingPeriod.Value &amp; " Days)")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
@@ -1561,7 +1561,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>11pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>None</TextDecoration>
@@ -1627,7 +1627,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1691,7 +1691,7 @@ ELSE
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1789,7 +1789,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectName.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>DarkBlue</Color>
@@ -1829,7 +1829,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectManager.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1862,7 +1862,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Business_Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1896,7 +1896,7 @@ ELSE
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!PM_Allocation.Value), "", (Fields!PM_Allocation.Value / 100))</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>0%</Format>
                                   </Style>
@@ -1931,7 +1931,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Project_Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1964,7 +1964,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!FDI.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1996,7 +1996,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!ProjectPercentCompleted.Value / 100</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -2031,7 +2031,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Start.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>MM/dd/yy</Format>
                                   </Style>
@@ -2065,7 +2065,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Finish.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>MM/dd/yy</Format>
                                   </Style>
@@ -2271,7 +2271,7 @@ ELSE
                                 <TextRun>
                                   <Value>=Fields!Portfolio_Funding_Source.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2307,7 +2307,7 @@ ELSE
                                   <Value>=Fields!Executive_Status_Summary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>None</TextDecoration>
                                   </Style>
@@ -2417,7 +2417,7 @@ ELSE
                                                   Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") ", "")
                                                 </Value>
                                                 <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
+                                                  <FontFamily>Segoe UI Light</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -2458,7 +2458,7 @@ ELSE
                                               <TextRun>
                                                 <Value>=Fields!TaskName.Value &amp; " (Due: " &amp; Format(Fields!TaskFinishDate.Value, "MM/dd/yy") &amp; ") "</Value>
                                                 <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
+                                                  <FontFamily>Segoe UI Light</FontFamily>
                                                   <FontSize>8pt</FontSize>
                                                 </Style>
                                               </TextRun>
@@ -3737,7 +3737,7 @@ Parameters!ParmLogo.Value = 5, "HCAHR"
                       <Value>CONFIDENTIAL - Contains proprietary information. Not intended for external distribution.</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>

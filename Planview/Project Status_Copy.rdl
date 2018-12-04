@@ -784,7 +784,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     "Overdue Key Tasks / Milestones")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -817,7 +817,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>% Complete</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -857,7 +857,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1071,7 +1071,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1107,7 +1107,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     "Overdue Deliverables")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1141,7 +1141,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>% Complete</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1181,7 +1181,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1396,7 +1396,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1429,7 +1429,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     "Current Period Accomplishments")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1462,7 +1462,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Actual Finish</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1626,7 +1626,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1659,7 +1659,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     "Upcoming Key Tasks / Milestones")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1693,7 +1693,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish","Baseline Finish","Finish Date")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1852,7 +1852,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -1888,7 +1888,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Active Risks</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -1941,7 +1941,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIf(CountRows("Tablix1") = 0, "Risk" &amp; vbCrLf &amp; "  None", "Risk")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1983,7 +1983,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Probability</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2028,7 +2028,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Impact</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2073,7 +2073,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2123,7 +2123,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -2168,7 +2168,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Risk_Probability.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -2207,7 +2207,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Risk_Impact.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2245,7 +2245,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Due_Date.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -2325,7 +2325,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -2358,7 +2358,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Active Issues</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2413,7 +2413,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     "Issue")
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2458,7 +2458,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Priority</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2503,7 +2503,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -2556,7 +2556,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -2601,7 +2601,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Issue_Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -2640,7 +2640,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Due_Date.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -2727,7 +2727,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -2754,7 +2754,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Manager Notes</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2798,7 +2798,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Project_Manager_Notes.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -2877,7 +2877,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Schedule Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -2921,7 +2921,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Schedule_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3000,7 +3000,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Deliverable Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3042,7 +3042,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Deliverable_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3121,7 +3121,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Milestone Status Commentary</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3165,7 +3165,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Milestone_Status_Commentary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3244,7 +3244,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Outcomes Expected</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3288,7 +3288,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Project_Outcomes_Expected.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3355,7 +3355,7 @@ WHERE	r.ResourceNTAccount = @UserID
                   <TextRun>
                     <Value>Key Tasks / Milestones</Value>
                     <Style>
-                      <FontFamily>Tahoma</FontFamily>
+                      <FontFamily>Segoe UI Light</FontFamily>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -3413,7 +3413,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Executive Status Summary</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -3460,7 +3460,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Executive_Status_Summary.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -3537,7 +3537,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Project_Name.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -4019,7 +4019,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!OverallHealthScore.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>0.00;(0.00)</Format>
                                   </Style>
@@ -4093,7 +4093,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Overall Health Indicator:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4138,7 +4138,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                     )
                                   </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4402,7 +4402,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Description</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -4450,7 +4450,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Value>=Fields!Project_Description.Value</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4536,7 +4536,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIF(Parameters!ParmBaselineNonBaseline.Value = "TaskBaselineFinish" AND IsNothing(Fields!Baseline_Start.Value),"Project Not Baselined","")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4724,7 +4724,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Schedule Variance</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4763,7 +4763,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -4951,7 +4951,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Milestone Hit Rate</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -4990,7 +4990,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5178,7 +5178,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Deliverable Hit Rate</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5217,7 +5217,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5411,7 +5411,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>PM Assessed Project Health</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5419,7 +5419,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Label>messagelabel</Label>
                                   <Value>=IIF(Fields!PM_Assessed_Project_Health.Value = "-"," (not defined)","")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5458,7 +5458,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5651,7 +5651,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>PM Assessed Project Health - Prior Period</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5742,7 +5742,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Manager:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5776,7 +5776,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5809,7 +5809,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Baseline Start:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5843,7 +5843,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!Baseline_Start.Value),"Not Baselined", Fields!Baseline_Start.Value)</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -5884,7 +5884,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Sponsor:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5918,7 +5918,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Project_Sponsor.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -5951,7 +5951,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Baseline Finish:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -5985,7 +5985,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIf(IsNothing(Fields!Baseline_Finish.Value), "Not Baselined", Fields!Baseline_Finish.Value)</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6026,7 +6026,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Business Owner:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6060,7 +6060,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Business_Owner.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -6093,7 +6093,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Start:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6127,7 +6127,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Start.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6168,7 +6168,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project % Completed:      </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6176,7 +6176,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Percent_Completed.Value / 100</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -6212,7 +6212,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Finish:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6246,7 +6246,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Finish.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6287,7 +6287,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Client:      </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6296,7 +6296,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Label>Client</Label>
                                   <Value>=Fields!Level_2.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6304,7 +6304,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value xml:space="preserve">             </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6313,7 +6313,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Label>Project Client Display</Label>
                                   <Value>=Fields!Project_Client_Display.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -6356,7 +6356,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Project Last Modified:      </Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6365,7 +6365,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                   <Label>Last Modified</Label>
                                   <Value>=Fields!Last_Modified.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                     <Format>d</Format>
@@ -6402,7 +6402,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Go Live:</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6436,7 +6436,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!GoLiveDate.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6528,7 +6528,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Open Action Items</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -6580,7 +6580,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIf(CountRows("Tablix4") = 0, "Action" &amp; vbCrLf &amp; "  None", "Action Item")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6622,7 +6622,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Priority</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6667,7 +6667,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -6717,7 +6717,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -6762,7 +6762,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -6800,7 +6800,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!DueDate.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -6879,7 +6879,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -6915,7 +6915,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Open Decisions</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -6968,7 +6968,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=IIf(CountRows("Tablix19") = 0, "Decision" &amp; vbCrLf &amp; "  None", "Decision")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -7010,7 +7010,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Decision Maker</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -7055,7 +7055,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Priority</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -7100,7 +7100,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>Due Date</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -7150,7 +7150,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Title.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <TextDecoration>Underline</TextDecoration>
                                     <Color>Blue</Color>
@@ -7195,7 +7195,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!DecisionMaker.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>P0</Format>
                                   </Style>
@@ -7234,7 +7234,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!Priority.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -7272,7 +7272,7 @@ WHERE	r.ResourceNTAccount = @UserID
                                 <TextRun>
                                   <Value>=Fields!DueDate.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Format>d</Format>
                                   </Style>
@@ -7352,7 +7352,7 @@ WHERE	r.ResourceNTAccount = @UserID
                 <Style>Solid</Style>
                 <Width>1pt</Width>
               </TopBorder>
-              <FontFamily>Tahoma</FontFamily>
+              <FontFamily>Segoe UI Light</FontFamily>
               <FontSize>8pt</FontSize>
               <FontWeight>Bold</FontWeight>
             </Style>
@@ -7394,7 +7394,7 @@ WHERE	r.ResourceNTAccount = @UserID
                     <TextRun>
                       <Value>Project Status Report</Value>
                       <Style>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>12pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
@@ -7431,7 +7431,7 @@ WHERE	r.ResourceNTAccount = @UserID
                     <TextRun>
                       <Value>Reporting Period:  </Value>
                       <Style>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
@@ -7440,7 +7440,7 @@ WHERE	r.ResourceNTAccount = @UserID
                       <Label>Start</Label>
                       <Value>=Parameters!ParmReportingStart.Value</Value>
                       <Style>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -7449,7 +7449,7 @@ WHERE	r.ResourceNTAccount = @UserID
                     <TextRun>
                       <Value> - </Value>
                       <Style>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -7459,7 +7459,7 @@ WHERE	r.ResourceNTAccount = @UserID
                       <Label>Finish</Label>
                       <Value>=Parameters!ParmReportingFinish.Value</Value>
                       <Style>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>d</Format>
@@ -7649,7 +7649,7 @@ WHERE	r.ResourceNTAccount = @UserID
                       <Value>CONFIDENTIAL - Contains proprietary information. Not intended for external distribution.</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
-                        <FontFamily>Tahoma</FontFamily>
+                        <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>8pt</FontSize>
                         <TextDecoration>None</TextDecoration>
                         <Color>#000000</Color>

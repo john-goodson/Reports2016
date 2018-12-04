@@ -1532,7 +1532,7 @@
                                 <TextRun>
                                   <Value>=IIf(Parameters!UpcomingPeriod.Value = 365, "Upcoming Activities   " &amp; "(All Days)", "Upcoming Activities   " &amp; "(" &amp; Parameters!UpcomingPeriod.Value &amp; " Days)")</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Color>Snow</Color>
