@@ -53,6 +53,7 @@
     <DataSource Include="PerViewDataMartNew.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="Portfolio Actuals.rdl" />
     <Report Include="Portfolio Project Status for Packet.rdl" />
     <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
     <Report Include="Program Status Orig.rdl" />
@@ -60,8 +61,6 @@
     <Report Include="Project Status - Packet.rdl" />
     <Report Include="Project Status.rdl" />
     <Report Include="Project Status_Copy.rdl" />
-    <Report Include="returnToPerview.rdl" />
-    <Report Include="Upgraded Portfolio Status (Client - HCA) - Copy.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />

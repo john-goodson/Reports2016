@@ -1581,15 +1581,14 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>
-                                    =SWITCH(
-                                    Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
-                                    Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
-                                    Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                    Parameters!GroupBy1.Value = "Business Owner", Fields!Business_Owner.Value,
-                                    Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value
-                                    )
-                                  </Value>
+                                  <Value>=SWITCH(
+                        Parameters!GroupBy1.Value = "Client", Fields!Client.Value,
+                        Parameters!GroupBy1.value = "Project Category", Fields!ProjectCategory.Value,
+                        Parameters!GroupBy1.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+						Parameters!GroupBy1.Value = "Business Owner", Fields!Business_Owner.Value,
+                        Parameters!GroupBy1.Value = "Service Line", Fields!Service_Line.Value,
+						Parameters!GroupBy1.Value = "Parent Program", Fields!Parent_Program.Value
+                        )</Value>
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -1647,15 +1646,14 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>
-                                    =SWITCH(
-                                    Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
-                                    Parameters!GroupBy2.value = "Project Category", Fields!ProjectCategory.Value,
-                                    Parameters!GroupBy2.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                    Parameters!GroupBy2.Value = "Business Owner", Fields!Business_Owner.Value,
-                                    Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value
-                                    )
-                                  </Value>
+                                  <Value>=SWITCH(
+                            Parameters!GroupBy2.Value = "Client", Fields!Client.Value,
+                            Parameters!GroupBy2.Value = "Project Category", Fields!ProjectCategory.Value,
+                            Parameters!GroupBy2.Value = "Project Sponsor", Fields!Project_Sponsor.Value,
+							Parameters!GroupBy2.Value = "Business Owner" , Fields!Business_Owner.Value,
+                            Parameters!GroupBy2.Value = "Service Line", Fields!Service_Line.Value,
+								Parameters!GroupBy2.Value = "Parent Program", Fields!Parent_Program.Value
+                            )</Value>
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1712,15 +1710,14 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>
-                                    =SWITCH(
-                                    Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
-                                    Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
-                                    Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
-                                    Parameters!GroupBy3.Value = "Business Owner", Fields!Business_Owner.Value,
-                                    Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value
-                                    )
-                                  </Value>
+                                  <Value>=SWITCH(
+                                Parameters!GroupBy3.Value = "Client", Fields!Client.Value,
+                                Parameters!GroupBy3.value = "Project Category", Fields!ProjectCategory.Value,
+                                Parameters!GroupBy3.value = "Project Sponsor", Fields!Project_Sponsor.Value,
+								Parameters!GroupBy3.Value = "Business Owner", Fields!Business_Owner.Value,
+                                Parameters!GroupBy3.Value = "Service Line", Fields!Service_Line.Value,
+									Parameters!GroupBy3.Value = "Parent Program", Fields!Parent_Program.Value
+                                )</Value>
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>9pt</FontSize>
