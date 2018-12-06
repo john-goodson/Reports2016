@@ -2511,7 +2511,10 @@ ELSE
                       <CellContents>
                         <Image Name="PrjctStatRpt">
                           <Source>Embedded</Source>
-                          <Value>ReportIcon</Value>
+                          <Value>=iif(
+                            Fields!epm_platform.Value = "PerView", "ReportIcon","PlanViewSmall"
+
+                            )</Value>
                           <Sizing>Clip</Sizing>
                           <ActionInfo>
                             <Actions>
@@ -2582,7 +2585,7 @@ ELSE
                               <Style>Solid</Style>
                               <Width>1.25pt</Width>
                             </TopBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingLeft>=IIF(Fields!epm_platform.Value="Planview","24pt","2pt")</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
@@ -9182,6 +9185,11 @@ Cny+G9EJ1nwHcadrF1aaZqFhbDxFYTW88F9eRWaPLcq+y22STIT5oAZdxUttYDc1H9vi+sLfwzEPBulT
 6rp9vp94SHYFpILcCGMnGcIAMEHvXk/j/wDbq1T4YwaHZ658N9S0fxHrer3GkpaahrdjaWLCG0+1/aIr2RxFLEyHaMAOJFdSo25PtPwt8Z3HxD+H+l61c2UGnzahD5zW8N9FfRx8nG2eImOQEAHKnHNc+I5/ZpSSS6ap9zajyczabb6/gdJRRRXGdQUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAhXJrA+KHgZPif8NfEPhua5ms4/EGm3OmvcRKC8AmiaMuoPBI3ZGfSugBzRQm07oGr6HgfjP9gfwlf/AAFsfBXhe00HwfJZ3mk3731p4ftWTUJtPljljNzAAqzKxQghj/GcGorL9g/R/FVxov8AwnreGPGFjottqtmumL4WtbHT54r8WgctCC4Dr9mOHGCRMwPSuh/bt+IWtfCv9kD4geIvDt5Pp2t6TpEs1ncwJG8sMmQAUEgKFueNw25xnivEbjxh8WvCGv6bomseIvGPhHwb448R6fodnrfij+x5te05ja389yI2tVa2RbiSGyt4WmDOryy4GTFXoUfbSp8yklq999le3XZ9DjqezjKzj29PLy3PWvhH+w9ofw68T6bqWsX7eNZtD0G38OaY+s2EE01na213cT2zeYVJMqJMkRfgv5COfmJNVU/YnuEmGg/8Jxf/APCsh4g/4ST/AIRj+zYfN8/7Z9v+zfa/v/ZPtf7zy9m/H7vzNny1494y+LnxEg8Wa18OtA8dXviRdB8VQ2MF0l/p2neINet20v7TPptvcyw/ZWurWVopXyiM8D7SwZWZsLxV+0v468ReCtN1jR/H3ia90/wv4Yu9Q1oadHo9l4g024t768ge+vrGfNveWyfZWiZbS4RXeCUrkSxbNPY12+bmWtv+A9tPz7GftKS05Xp/T66ntWkf8E4fDXhbT9Ek0fUDpPiKxTVbPU9attOhS48QWOotM89rdYA3hZJIpEYksrwKRwzhqXhv/gm3Z+ENSivtN8aatb3t
 jLp9xprvZQyR6bNa6fLaSPGnT9/LItzICcGSNR0ryz4hftJ/ETxx8WY9G8Pa/wCKLnT7vxVqcVvBoMumaZdy2cWg6TeQqJL+NkVBLdyuVb95+8AJIXFTfDj9snxx4s0/wTdXHidZP7StfBKamyWcEUclxd6zqtlqP8JX5xaIhZDsPl7o8Kwq+TFKPNzLX/P/AIcnmoOXLy7foj0Zv+CVngnQdCsLHwxqWqeHNmhLoGpyh2um1iKO5trqKWQSOQkiTQO4KAD/AEmbj5uNfW/+CdujD4g+NPEmh+Jta0G+8TajpmuaZHHFHPb+HdTs5buZ7iBG+9HcveTGaFvlYyylSrSZFL9pf4heJr3xl8UNP0Pxlq3h+08J/Dq18U6fJpaWrMLwS6sr7jNFIGjcW8IZf+mYwRk58m+OXx3+I/wf+HWkW2meOvEeq3ur+ALfxA1zcR6et4by41jSbY+U5gSFMRXMyJvUqvmZbOARFOWIm1Hn1ffztvp6FSVGN3y6L+u57D49/Yb8R/EubRdV1r4kLrHiTSdYuNVWTU/DcF5pUaS2f2T7NDYvJtiRV+fd5jO0jMxYggD2/wCFPhC78A/D7TNGvryw1C50+IxPPY6cunW7jcSoS3RmWMBSBgE9M96+WvGfiP4n6V4X8O6PY+IPGlvrGua5cGbSdS8Q+H4/EWr2kNqGKabcRwm0GyRlkeOXbIyo+HVQQff/ANkr4jS/Ff8AZ68O63Pqt/rl1Mk1tcXt7YRWF1JNBPJBIJYoXeISK8bKxiYxsVLJ8rAVhiI1OROTVr9Lefb5mlCVPmaimn5/I9LoooriOwKKKKACiiigAooooAKKKKACiiigAooooAKKKKAKOuaFY+KNKnsdSs7XULK6XZNbXMKyxTL6MjAgj6iovFXhLS/HXh+60nWtNsNY0q+Ty7mzvrdLi3uFyDteNwVYZA4I7Vp0UXfQDi7r9nzwFf8Aw+i8Iz+CfCM3hW3kEkeiyaPbtp8bgk7l
 gKeWDkk5C9Sabr37PHgDxVZ6Lb6p4H8Ialb+G1CaTFdaNbTJpYGMCAMhEQG1fuY+6PSu1wfWl5p+0kTyx7HG+L/gL4G+IsTJr3g3wnritdNesuoaRb3INwyLG0x3of3hREUt1KqozgCptb+Cvg7xNorabqXhPwzqGmNb29o1pc6XBLAYbdmaCMoyldkbMxRcYUsSMZrq+vejOeho9pLuw5I9jmPDvwi8J+ENGk07SfDHh/S9PmtTYyWtpp0MEL25Z3MJRVAMZaWVtuMZkc4+Y5d4h+EnhXxlp7WereGfD+p2rWf9mtBd6dDPG1ruR/s5VlI8rdGjbPu5RTjgV0xoo55d9Q5Vsedr+yd8Lo/C1zoK/DfwH/Yd9cJd3OnDw/aC0uJkBVJXi8vYzqCQGIyATiu00PQ7LwvpFrp2m2drp9hZRLBbW1tEsUNvGowqIigBVA4AAwK0KDS5pPdgopbBRRRQUFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/Z</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="PlanViewSmall">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIAA0ALQMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP3YvfiK0b3H2LQde1NbVikrRpDbBCOf+XiWI49wMEEHODmn
+L4l1+9QfZ/DX2dm6DUNQjix9fJE36ZryXxf+wRoniG0+O95a6gln4n+OFhPp0+qPaNKmmwtp8VnGjQiVROEaMy5LIzbygZQAa2viN+zb4k+KPjv4ceJtQ8eCw1T4dypeRwaZo4i0/UbqRkjvJXhlmlZQ9n9otogJN0IvJnLykqFAO6l1vxWFYPo/hmNdrHd/b0wIA4J/49O2a5n4KaT8Rvh78L9C0PxRqWleO/EOm2qQajr1zqKWtzqtxjc8hggso4Y854RQAFA5JyTyvhX9gzQ9H+IniHWNU1jUPEGk+K7LxHY6poF6gfTpk1m+huJyisS0WYYIoHRWEUnliQJHI0rS7Pwy/ZLh+HGj/DuF/Eeoa5qXgvUb3WNS1S/gRrvxHe3dvcRTzyldqxsz3DMAoKqqLGoCgYAO1i+Il88iqvhjVLr5ipktLyxkjUjqMtOjZHptra0DxJb+IYZGjjuYJIW2SRXELRSIfofvDqNykqSGGcggfOPhv/gmhpMP7H3hv4R6v4ik+z+GbyOaLVtBtptLuLmAwNaXMcge4nIe5s5rqCR42QKLjMSRFEx7h8H/AIPaf8I/AekaShXVNQsdPhs73V57eNbzV5ELvJcTsoG6SSaWeZu3mTyHqxyAf//Z</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
