@@ -92,11 +92,19 @@ IF @ParmShellProjects = 'Only'
           <QueryParameter Name="@ParmBaselineNonBaseline">
             <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@ParmIncludePlanView">
+            <Value>=Parameters!ParmIncludePlanview.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>uspReportsProgramStatusReport_dsProjectDetail</CommandText>
       </Query>
       <Fields>
+        <Field Name="Row_">
+          <DataField>Row#</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
         <Field Name="OrderName">
           <DataField>OrderName</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -105,8 +113,8 @@ IF @ParmShellProjects = 'Only'
           <DataField>ProjectUID</DataField>
           <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
-        <Field Name="Project_Name">
-          <DataField>Project_Name</DataField>
+        <Field Name="puid">
+          <DataField>puid</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Parent_Program">
@@ -117,8 +125,16 @@ IF @ParmShellProjects = 'Only'
           <DataField>ProjectURL</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Project_Client_Display">
           <DataField>Project Client Display</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="relatedProj">
+          <DataField>relatedProj</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Last_Modified">
@@ -131,6 +147,10 @@ IF @ParmShellProjects = 'Only'
         </Field>
         <Field Name="Owner">
           <DataField>Owner</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="epm_platform">
+          <DataField>epm_platform</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Level_2">
@@ -204,6 +224,10 @@ IF @ParmShellProjects = 'Only'
         <Field Name="SchedInd">
           <DataField>SchedInd</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="sortOrder">
+          <DataField>sortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="OverallHealthScore">
           <DataField>OverallHealthScore</DataField>
@@ -2531,7 +2555,7 @@ ELSE
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Project_Name.Value</Value>
+                                  <Value>=Fields!ProjectName.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3901,12 +3925,10 @@ ELSE
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>
-                                    =Switch(
-                                    Fields!Project_Name.Value = Parameters!ParmParentProgram.Value, "See Executive Status Above",
+                                  <Value>=Switch(
+                                   Fields!ProjectName.Value = Parameters!ParmParentProgram.Value, "See Executive Status Above",
                                     Not(IsNothing(Fields!Executive_Status_Summary.Value)), ("&lt;b&gt;" &amp; "Executive Status Summary:  " &amp; "&lt;/b&gt;" &amp; Fields!Executive_Status_Summary.Value)
-                                    )
-                                  </Value>
+                                    )</Value>
                                   <MarkupType>HTML</MarkupType>
                                   <Style>
                                     <FontSize>8pt</FontSize>
@@ -8586,11 +8608,32 @@ ELSE
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="ParmIncludePlanview">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>No</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Include PlanView Projects</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Yes</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>No</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>14</NumberOfRows>
+      <NumberOfRows>15</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -8741,6 +8784,11 @@ ELSE
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>13</RowIndex>
           <ParameterName>ParmConfidential</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>14</RowIndex>
+          <ParameterName>ParmIncludePlanview</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
