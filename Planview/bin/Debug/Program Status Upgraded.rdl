@@ -3939,7 +3939,7 @@ ELSE
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>=IIF(Fields!epm_platform.Value="Planview","24pt","2pt")</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
