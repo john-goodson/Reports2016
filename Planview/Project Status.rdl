@@ -215,14 +215,10 @@ select '30 Days' as Period, '30' as MemberValue
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
-	SELECT	NULL AS ProjectName
-		  , NULL AS Value
-ELSE
-	SELECT	DISTINCT 
+        <CommandText>		SELECT	DISTINCT 
 			p.ProjectName
 		  , p.ProjectUID AS Value
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+	FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
 	WHERE	1=1
 			AND (p.ProjectType IN (0,5,6))
 			--AND p.ProjectUID IN (@ParmProjectsAllowed)
@@ -232,11 +228,11 @@ ELSE
       <Fields>
         <Field Name="ProjectName">
           <DataField>ProjectName</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Value">
           <DataField>Value</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -247,22 +243,12 @@ ELSE
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmProjectsAllowed">
-            <Value>=Parameters!ParmProjectsAllowed.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
-	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
+        <CommandText>	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
 	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
 	WHERE	1=1
 			--AND p.ProjectUID IN (@ParmProjectsAllowed)
-	ORDER BY [ProjectActiveStatus]
-ELSE
-	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
-	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
-	WHERE	1=1
-			AND p.ProjectUID IN (@ParmProjectsAllowed)
-			--AND p.ProjectUID = @ParmProject
+			 AND p.ProjectUID = @ParmProject
 	ORDER BY [ProjectActiveStatus]</CommandText>
       </Query>
       <Fields>
@@ -279,36 +265,18 @@ ELSE
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
-	SELECT	DISTINCT p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+        <CommandText>	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
+	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
 	WHERE	1=1
-			AND (p.ProjectType IN (0,5,6))
 			--AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-	ORDER BY 1
-ELSE
-	SELECT	p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
-	WHERE	1=1
-			AND (p.ProjectType IN (0,5,6))
-			--AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND p.ProjectUID = @ParmProject
-	ORDER BY 1</CommandText>
+			 AND p.ProjectUID = @ParmProject
+	ORDER BY [ProjectActiveStatus]</CommandText>
       </Query>
       <Fields>
-        <Field Name="ProjectOwnername">
-          <DataField>ProjectOwnername</DataField>
+        <Field Name="ProjectActiveStatus">
+          <DataField>ProjectActiveStatus</DataField>
           <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProjectOwnerResourceUID">
-          <DataField>ProjectOwnerResourceUID</DataField>
-          <rd:TypeName>System.Guid</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -319,31 +287,18 @@ ELSE
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>IF @ParmProject IS NULL OR @ParmProject = ''
-	SELECT	NULL AS ProjectOwnername
-		  , NULL AS ProjectOwnerResourceUID
-ELSE
-	SELECT	p.ProjectOwnername, p.ProjectOwnerResourceUID
-	FROM	PerViewDataMart.dbo.dim_Project AS p WITH (NOLOCK)
+        <CommandText>	SELECT	DISTINCT ISNULL(p.[Project Active Status], '&lt;N/A&gt;') AS ProjectActiveStatus
+	FROM	PerViewDataMart.dbo.dim_Project p WITH (NOLOCK)
 	WHERE	1=1
-			AND (p.ProjectType IN (0,5,6))
 			--AND p.ProjectUID IN (@ParmProjectsAllowed)
-			AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-			AND p.ProjectUID = @ParmProject
-	ORDER BY 1</CommandText>
+			 AND p.ProjectUID = @ParmProject
+	ORDER BY [ProjectActiveStatus]</CommandText>
       </Query>
       <Fields>
-        <Field Name="ProjectOwnername">
-          <DataField>ProjectOwnername</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ProjectOwnerResourceUID">
-          <DataField>ProjectOwnerResourceUID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="ProjectActiveStatus">
+          <DataField>ProjectActiveStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -595,56 +550,8 @@ WHERE	r.ResourceNTAccount = @UserID	</CommandText>
           <QueryParameter Name="@ParmProject">
             <Value>=Parameters!ParmProject.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ParmShellProjects">
-            <Value>=Parameters!ParmShellProjects.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmActiveStatus">
-            <Value>=Parameters!ParmActiveStatus.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ParmProjectManager">
-            <Value>=Parameters!ParmProjectManager.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>	IF @ParmProject = NULL OR @ParmProject = ''
-	BEGIN
-		IF @ParmShellProjects = 'No'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					AND (ISNULL(p.[Shell Project Flag],'No') = 'No')
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-		IF @ParmShellProjects = 'Yes'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-		IF @ParmShellProjects = 'Only'
-			SELECT	DISTINCT
-					p.ProjectName
-				  , p.ProjectUID AS Value
-			FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
-			WHERE	1=1
-					AND (p.ProjectType IN (0,5,6))
-					AND (ISNULL(p.[Shell Project Flag],'No') = 'Yes')
-					--AND p.ProjectUID IN (@ParmProjectsAllowed)
-					AND (ISNULL(p.[Project Active Status], '&lt;N/A&gt;') IN (@ParmActiveStatus))
-					AND (p.ProjectOwnerResourceUID IN (@ParmProjectManager))
-			ORDER BY ProjectName
-	END
-ELSE
-	SELECT	DISTINCT 
+        <CommandText>		SELECT	DISTINCT 
 			p.ProjectName
 		  , p.ProjectUID AS Value
 	FROM	PerViewDataMart.dbo.dim_project AS p WITH (NOLOCK)
@@ -6452,7 +6359,7 @@ ELSE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Project Status Report</Value>
+                      <Value>Project Status Report Yo</Value>
                       <Style>
                         <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>12pt</FontSize>
@@ -6470,7 +6377,7 @@ ELSE
               <Top>0.01207in</Top>
               <Left>4.24981in</Left>
               <Height>0.25347in</Height>
-              <Width>1.95593in</Width>
+              <Width>2.3726in</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -6767,39 +6674,21 @@ ELSE
     <ReportParameter Name="ParmProject">
       <DataType>String</DataType>
       <DefaultValue>
-        <Values>
-          <Value />
-        </Values>
+        <DataSetReference>
+          <DataSetName>dsProjects</DataSetName>
+          <ValueField>Value</ValueField>
+        </DataSetReference>
       </DefaultValue>
       <AllowBlank>true</AllowBlank>
       <Prompt>URLProjectName</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="ParmProjectsAllowed">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>dsProjectsAllowed</DataSetName>
-          <ValueField>Proj_UID_Allowed</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>Projects Allowed</Prompt>
-      <Hidden>true</Hidden>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>dsProjectsAllowed</DataSetName>
-          <ValueField>Proj_UID_Allowed</ValueField>
-          <LabelField>ProjectName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="ParmActiveStatus">
       <DataType>String</DataType>
       <DefaultValue>
-        <Values>
-          <Value>In Progress</Value>
-        </Values>
+        <DataSetReference>
+          <DataSetName>prmActiveStatus</DataSetName>
+          <ValueField>ProjectActiveStatus</ValueField>
+        </DataSetReference>
       </DefaultValue>
       <Prompt>Project Status:</Prompt>
       <ValidValues>
@@ -6859,7 +6748,7 @@ ELSE
       <DataType>String</DataType>
       <DefaultValue>
         <DataSetReference>
-          <DataSetName>dsProjects2</DataSetName>
+          <DataSetName>dsProjects</DataSetName>
           <ValueField>Value</ValueField>
         </DataSetReference>
       </DefaultValue>
@@ -6881,6 +6770,7 @@ ELSE
         </Values>
       </DefaultValue>
       <Prompt>Reporting Start Date: </Prompt>
+      <Hidden>true</Hidden>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmReportingFinish">
@@ -6891,6 +6781,7 @@ ELSE
         </Values>
       </DefaultValue>
       <Prompt>Reporting Finish Date: </Prompt>
+      <Hidden>true</Hidden>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmBaselineNonBaseline">
@@ -6922,13 +6813,6 @@ ELSE
         </Values>
       </DefaultValue>
       <Prompt>Upcoming Period:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>dsUpcomingPeriods</DataSetName>
-          <ValueField>MemberValue</ValueField>
-          <LabelField>Period</LabelField>
-        </DataSetReference>
-      </ValidValues>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="DisplayIssuesRisks">
@@ -7286,11 +7170,6 @@ ELSE
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>ParmProject</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>ParmProjectsAllowed</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>

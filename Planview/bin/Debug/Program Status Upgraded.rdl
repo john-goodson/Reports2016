@@ -3,7 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="PerViewDataMart">
-      <DataSourceReference>PerViewDataMart New</DataSourceReference>
+      <DataSourceReference>PerViewDataMartNew</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>2d8037e7-95d2-46d4-8805-1cb1592628b7</rd:DataSourceID>
     </DataSource>
@@ -143,6 +143,10 @@ IF @ParmShellProjects = 'Only'
         </Field>
         <Field Name="Project_Client">
           <DataField>Project Client</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectStatusURLRef">
+          <DataField>ProjectStatusURLRef</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Owner">
@@ -2519,23 +2523,7 @@ ELSE
                           <ActionInfo>
                             <Actions>
                               <Action>
-                                <Drillthrough>
-                                  <ReportName>Project Status</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="ParmProjectName">
-                                      <Value>=Fields!ProjectUID.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="ParmReportingStart">
-                                      <Value>=Parameters!ParmReportStartDate.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="ParmReportingFinish">
-                                      <Value>=Parameters!ParmReportFinishDate.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="ParmBaselineNonBaseline">
-                                      <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
+                                <Hyperlink>="https://perview.app.parallon.com/PWA/_layouts/15/ReportServer/RSViewerPage.aspx?rv:RelativeReportUrl=%2fPWA%2fProjectBICenter%2fAll%2520Reports%2fProject%2520Status.rdl&amp;rp%3aParmProject=" +  CType(Fields!ProjectUID.Value, GUID).ToString  + "&amp;rp%3aParmActiveStatus=" + Fields!Project_Active_Status.Value</Hyperlink>
                               </Action>
                             </Actions>
                           </ActionInfo>
@@ -6767,65 +6755,11 @@ ELSE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Subreport Name="PortfolioProjectStatusforPacket">
-                          <ReportName>Portfolio Project Status for Packet</ReportName>
+                        <Subreport Name="boo">
+                          <ReportName>Project Status For Packet Upgraded</ReportName>
                           <Parameters>
-                            <Parameter Name="UserID">
-                              <Value>=Parameters!UserID.Value</Value>
-                            </Parameter>
                             <Parameter Name="ParmProjectName">
                               <Value>=Fields!ProjectUID.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingStart">
-                              <Value>=Parameters!ParmReportStartDate.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmReportingFinish">
-                              <Value>=Parameters!ParmReportFinishDate.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmBaselineNonBaseline">
-                              <Value>=Parameters!ParmBaselineNonBaseline.Value</Value>
-                            </Parameter>
-                            <Parameter Name="UpcomingPeriod">
-                              <Value>=Parameters!UpcomingPeriod.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayIssuesRisks">
-                              <Value>=Parameters!DisplayIssuesRisks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayItemsDecisions">
-                              <Value>=Parameters!ParmDisplayItemsDecisions.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmOverdueKeyTasks">
-                              <Value>=Parameters!ParmOverdueKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDeliverables">
-                              <Value>=Parameters!ParmDeliverables.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmAccomplishments">
-                              <Value>=Parameters!ParmAccomplishments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmUpcomingKeyTasks">
-                              <Value>=Parameters!ParmUpcomingKeyTasks.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmTaskComments">
-                              <Value>=Parameters!ParmTaskComments.Value</Value>
-                            </Parameter>
-                            <Parameter Name="ParmDisplayProjectDescription">
-                              <Value>=Parameters!ParmDisplayProjectDescription.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayPMNotes">
-                              <Value>=Parameters!DisplayPMNotes.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplaySchdCom">
-                              <Value>=Parameters!DisplaySchdCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayDelivCom">
-                              <Value>=Parameters!DisplayDelivCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayMilesCom">
-                              <Value>=Parameters!DisplayMilesCom.Value</Value>
-                            </Parameter>
-                            <Parameter Name="DisplayProjectOutcomesExpected">
-                              <Value>=Parameters!DisplayProjectOutcomesExpected.Value</Value>
                             </Parameter>
                           </Parameters>
                           <Style>
@@ -6834,6 +6768,7 @@ ELSE
                             </Border>
                           </Style>
                         </Subreport>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -7771,7 +7706,6 @@ ELSE
                         <FontSize>14pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <TextDecoration>None</TextDecoration>
-                        <Color>SteelBlue</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>

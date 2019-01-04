@@ -6389,9 +6389,10 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
     <ReportParameter Name="ParmProjectName">
       <DataType>String</DataType>
       <DefaultValue>
-        <Values>
-          <Value>SPA 2017 Internal Program</Value>
-        </Values>
+        <DataSetReference>
+          <DataSetName>dsProjects</DataSetName>
+          <ValueField>ProjectName</ValueField>
+        </DataSetReference>
       </DefaultValue>
       <Prompt>Project Name</Prompt>
       <MultiValue>true</MultiValue>
@@ -6400,13 +6401,11 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
     <ReportParameter Name="ParmReportingStart">
       <DataType>DateTime</DataType>
       <Prompt>Reporting Start Date: </Prompt>
-      <Hidden>true</Hidden>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmReportingFinish">
       <DataType>DateTime</DataType>
       <Prompt>Reporting Finish Date: </Prompt>
-      <Hidden>true</Hidden>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ParmBaselineNonBaseline">
@@ -6770,7 +6769,7 @@ select 'All Days' as Period, '365' as MemberValue </CommandText>
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>4569743C-7C74-E611-80E6-0050568F1156</Value>
+          <Value>27aefb32-4f00-4ff0-a923-6b18dd7b74a5</Value>
         </Values>
       </DefaultValue>
       <Prompt>Parm Project</Prompt>

@@ -54,14 +54,22 @@
     <DataSource Include="PerviewDataMart_Old.rds" />
   </ItemGroup>
   <ItemGroup>
-    <Report Include="Portfolio Actuals.rdl" />
-    <Report Include="Portfolio Project Status for Packet.rdl" />
+    <Report Include="boo.rdl" />
+    <Report Include="foo.rdl" />
+    <Report Include="POC.rdl" />
+    <Report Include="Portfolio Actuals Orig.rdl" />
+    <Report Include="Portfolio Actuals PMProjectHours.rdl" />
+    <Report Include="Portfolio Actuals Summary.rdl" />
+    <Report Include="Portfolio Actuals Upgraded.rdl" />
+    <Report Include="Portfolio Project Status for Packet - Orig.rdl" />
     <Report Include="Portfolio Status (Client - HCA) Orig.rdl" />
     <Report Include="Program Status Orig.rdl" />
     <Report Include="Program Status Upgraded.rdl" />
     <Report Include="Project Status - Packet.rdl" />
+    <Report Include="Project Status For Packet Upgraded.rdl" />
+    <Report Include="Project Status Orig Copy.rdl" />
+    <Report Include="Project Status Orig.rdl" />
     <Report Include="Project Status.rdl" />
-    <Report Include="Project Status_Copy.rdl" />
     <Report Include="Resource Planning.rdl" />
     <Report Include="Upgraded Portfolio Status (Client - HCA).rdl" />
   </ItemGroup>
