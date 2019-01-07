@@ -516,7 +516,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Project Status Report</Value>
+                                  <Value>Project Status Report --</Value>
                                   <Style>
                                     <FontFamily>Segoe UI Light</FontFamily>
                                     <FontSize>12pt</FontSize>
